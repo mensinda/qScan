@@ -1,0 +1,6 @@
+[wrap-file]
+directory = enumGen-1.1.2
+
+source_url      = https://github.com/mensinda/enumGen/archive/v1.1.2.tar.gz
+source_filename = v1.1.2.tar.gz
+source_hash     = 987e608f52e651e1c90514893485331227f0064e887068124fac1a8cb96d7a8a

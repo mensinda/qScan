@@ -1,0 +1,11 @@
+{
+  "funcName": "toStr",
+  "namespace": "qscan::lib",
+  "useNamespace": true,
+  "enableBitfields": true,
+  "enableGetList": true,
+  "enableFromStr": true,
+  "bitfieldType": "uint64_t",
+  "indent": 2,
+  "bitfieldConcat": " | "
+}
