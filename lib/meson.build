@@ -1,8 +1,18 @@
 qscan_lib_src = files([
     'qscan_log.cpp',
-    'ScanBackend.cpp',
     'SaneBackend.cpp',
+    'SaneDevice.cpp',
+    'SaneException.cpp',
+    'SaneOption.cpp',
 ])
+
+qscan_lib_src += configure_file(
+    configuration: {
+        'PROJ_VERSION': meson.project_version(),
+    },
+    input: 'qscan_config.hpp.in',
+    output: 'qscan_config.hpp',
+)
 
 sane_inc_dir = sane_dep.get_variable(pkgconfig: 'includedir')
 
@@ -13,6 +23,7 @@ enumGen_cfg = files(['enumGen.json'])
 
 enumGen_src = [
     sane_inc_dir / 'sane' / 'sane.h',
+    'SaneOption.hpp',
 ]
 
 enumGen_extracted = enumGen_cc.process(enumGen_src)

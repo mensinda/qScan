@@ -7,6 +7,6 @@ namespace qscan::lib {
 
 using logger_t = std::shared_ptr<spdlog::logger>;
 
-logger_t logger();
+[[nodiscard]] logger_t logger();
 
 } // namespace qscan::lib

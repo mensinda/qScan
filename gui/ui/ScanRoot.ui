@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScanRoot</class>
+ <widget class="QWidget" name="ScanRoot">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>728</width>
+    <height>486</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <layout class="QVBoxLayout" name="cfgLayout">
+       <item>
+        <widget class="QWidget" name="settings" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>256</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNewTab">
+         <property name="text">
+          <string>New Tab</string>
+         </property>
+         <property name="icon">
+          <iconset theme="tab-new"/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="deviceSelection">
+         <property name="toolTip">
+          <string>Go back to the device selection screen</string>
+         </property>
+         <property name="text">
+          <string>Switch device</string>
+         </property>
+         <property name="icon">
+          <iconset theme="view-refresh"/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QTabWidget" name="mainTabs">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="preview">
+       <attribute name="title">
+        <string>Preview</string>
+       </attribute>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="conrolLayout">
+     <item>
+      <widget class="QPushButton" name="btnScanOne">
+       <property name="toolTip">
+        <string>Scan a signle image</string>
+       </property>
+       <property name="icon">
+        <iconset theme="media-playback-start"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>34</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnScanBatch">
+       <property name="toolTip">
+        <string>Scan multiple images</string>
+       </property>
+       <property name="icon">
+        <iconset theme="media-playlist-repeat"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="scanProgress">
+       <property name="value">
+        <number>24</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnStop">
+       <property name="toolTip">
+        <string>Stop the current scan process</string>
+       </property>
+       <property name="icon">
+        <iconset theme="process-stop"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>btnScanBatch</sender>
+   <signal>clicked()</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>scanBatch()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>83</x>
+     <y>453</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnScanOne</sender>
+   <signal>clicked()</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>scanOne()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>453</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnStop</sender>
+   <signal>clicked()</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>scanAbort()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>697</x>
+     <y>453</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deviceSelection</sender>
+   <signal>clicked()</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>switchDevice()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>403</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnNewTab</sender>
+   <signal>clicked()</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>newTab()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>scanOne()</slot>
+  <slot>scanBatch()</slot>
+  <slot>scanAbort()</slot>
+  <slot>switchDevice()</slot>
+  <slot>newTab()</slot>
+ </slots>
+</ui>

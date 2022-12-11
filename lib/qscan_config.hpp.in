@@ -1,0 +1,9 @@
+#pragma once
+
+#include <string>
+
+namespace qscan::lib {
+
+const std::string QSCAN_VERSION_STR = "@PROJ_VERSION@";
+
+}

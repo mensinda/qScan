@@ -10,7 +10,10 @@ project(
     ]
 )
 
+add_global_arguments('-Wno-pedantic', language: 'cpp')
+
 sane_dep = dependency('sane-backends')
+json_dep = dependency('nlohmann_json')
 
 cm = import('cmake')
 spdlog_opt = cm.subproject_options()
@@ -32,6 +35,9 @@ spdlog_opt.add_cmake_defines({
 spdlog_sp  = cm.subproject('spdlog', options: spdlog_opt)
 spdlog_dep = spdlog_sp.dependency('spdlog')
 
+qt = import('qt5')
+qt_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets'], include_type: 'system')
 
 subdir('lib')
+subdir('gui')
 subdir('test')

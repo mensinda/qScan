@@ -4,7 +4,7 @@
 
 namespace {
 
-qscan::lib::logger_t create_logger() {
+[[nodiscard]] qscan::lib::logger_t create_logger() {
     qscan::lib::logger_t log = spdlog::stdout_color_mt("qscan");
 
     log->set_pattern(
@@ -17,7 +17,7 @@ qscan::lib::logger_t create_logger() {
 
 namespace qscan::lib {
 
-logger_t logger() {
+[[nodiscard]] logger_t logger() {
     static logger_t log{create_logger()};
     return log;
 }
