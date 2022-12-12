@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OptionsWidget</class>
+ <widget class="QWidget" name="OptionsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>488</width>
+    <height>522</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>300</width>
+    <height>250</height>
+   </size>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QToolBox" name="toolBox">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="common">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>476</width>
+        <height>378</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>Common</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="1" column="0">
+        <spacer name="hs4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="lc2">
+         <property name="text">
+          <string>Color mode:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QComboBox" name="coSource"/>
+       </item>
+       <item row="1" column="3">
+        <widget class="QComboBox" name="coMode"/>
+       </item>
+       <item row="0" column="4" rowspan="3">
+        <spacer name="hs1">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="1" colspan="4">
+        <spacer name="vs1">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="3">
+        <widget class="QComboBox" name="coResolution"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="lc1">
+         <property name="text">
+          <string>Document source:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="lc3">
+         <property name="text">
+          <string>Resolution:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <spacer name="hs7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="scanArea">
+      <attribute name="label">
+       <string>Scan area</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="3" column="2">
+        <widget class="QDoubleSpinBox" name="bottomRight">
+         <property name="suffix">
+          <string>mm</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="sal2">
+         <property name="text">
+          <string>Top Right:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="sal3">
+         <property name="text">
+          <string>Bottom Left:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <spacer name="vs3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="0">
+        <spacer name="hs5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="sal4">
+         <property name="text">
+          <string>Bottom Right:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <spacer name="hs3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="2">
+        <widget class="QDoubleSpinBox" name="bottomLeft">
+         <property name="suffix">
+          <string>mm</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QDoubleSpinBox" name="topLeft">
+         <property name="suffix">
+          <string>mm</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QDoubleSpinBox" name="topRight">
+         <property name="suffix">
+          <string>mm</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="sal1">
+         <property name="text">
+          <string>Top Left:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <spacer name="hs6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="batch">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>476</width>
+        <height>378</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>Batch</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="batchMax">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>65536</number>
+         </property>
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="batchDelay">
+         <property name="suffix">
+          <string>s</string>
+         </property>
+         <property name="maximum">
+          <number>120</number>
+         </property>
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="barchMaxCB">
+         <property name="text">
+          <string>Limit batch size:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="hs2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="2">
+        <widget class="QSlider" name="batchDelayS">
+         <property name="maximum">
+          <number>120</number>
+         </property>
+         <property name="value">
+          <number>10</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="batchDelayCB">
+         <property name="text">
+          <string>Delay beteen scans:</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <spacer name="vs2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>68</width>
+           <height>98</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="advanced">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>476</width>
+        <height>378</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>Advanced</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>363</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>batchDelay</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>batchDelayS</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>259</x>
+     <y>335</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>334</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>batchDelayS</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>batchDelay</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>334</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>259</x>
+     <y>335</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>coMode</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>modeUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>221</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>coResolution</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>resolutionUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>221</x>
+     <y>139</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>coSource</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>sourceUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>221</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>batchDelayCB</sender>
+   <signal>clicked()</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>batchSettingsUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>barchMaxCB</sender>
+   <signal>clicked()</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>batchSettingsUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>batchDelay</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>batchSettingsUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>253</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>batchMax</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>batchSettingsUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>253</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>topLeft</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>scanAreaUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>topRight</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>scanAreaUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bottomLeft</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>scanAreaUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>172</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bottomRight</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>OptionsWidget</receiver>
+   <slot>scanAreaUpdated()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>sourceUpdated()</slot>
+  <slot>modeUpdated()</slot>
+  <slot>resolutionUpdated()</slot>
+  <slot>batchSettingsUpdated()</slot>
+  <slot>scanAreaUpdated()</slot>
+ </slots>
+</ui>

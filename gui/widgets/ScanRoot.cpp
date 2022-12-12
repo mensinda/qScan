@@ -16,6 +16,7 @@ ScanRoot::ScanRoot(QWidget *parent) : QWidget(parent), ui(new Ui::ScanRoot) {
     ui->setupUi(this);
 
     ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
+    ui->settings->setScanRoot(this);
 
     QObject::connect(this, SIGNAL(signalConnected()), this, SLOT(deviceConnected()));
     QObject::connect(this, SIGNAL(signalConnectionFailed()), this, SLOT(connectionFailed()));
@@ -42,7 +43,8 @@ void ScanRoot::updateSaneDevice(std::unique_ptr<lib::SaneDevice> device) {
     ui->scanProgress->setMinimum(0);
     ui->scanProgress->setMaximum(0);
     ui->scanProgress->setValue(-1);
-    ui->splitter->setEnabled(true);
+    ui->mainTabs->setEnabled(false);
+    ui->cfgRootWidget->setEnabled(false);
     ui->btnStop->setEnabled(false);
     ui->btnScanOne->setEnabled(false);
     ui->btnScanBatch->setEnabled(false);
@@ -73,6 +75,8 @@ void ScanRoot::deviceConnected() {
     ui->btnStop->setEnabled(false);
     ui->btnScanOne->setEnabled(true);
     ui->btnScanBatch->setEnabled(true);
+    ui->mainTabs->setEnabled(true);
+    ui->cfgRootWidget->setEnabled(true);
 }
 
 void ScanRoot::connectionFailed() {
@@ -82,6 +86,8 @@ void ScanRoot::connectionFailed() {
     ui->btnStop->setEnabled(false);
     ui->btnScanOne->setEnabled(false);
     ui->btnScanBatch->setEnabled(false);
+    ui->mainTabs->setEnabled(false);
+    ui->cfgRootWidget->setEnabled(false);
 
     QMessageBox::critical(this,
                           tr("Failed to connect"),

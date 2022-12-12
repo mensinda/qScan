@@ -10,7 +10,7 @@
     <height>486</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <widget class="QSplitter" name="splitter">
      <property name="sizePolicy">
@@ -22,16 +22,33 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="verticalLayoutWidget">
-      <layout class="QVBoxLayout" name="cfgLayout">
+     <widget class="QWidget" name="cfgRootWidget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
-        <widget class="QWidget" name="settings" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>256</width>
-           <height>64</height>
-          </size>
+        <widget class="QGroupBox" name="settingsGrp">
+         <property name="title">
+          <string>Scanner options</string>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="qscan::gui::OptionsWidget" name="settings" native="true"/>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -148,6 +165,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qscan::gui::OptionsWidget</class>
+   <extends>QWidget</extends>
+   <header>OptionsWidget.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

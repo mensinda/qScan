@@ -11,6 +11,7 @@ widgets = [
     'MainWindow',
     'DeviceElement',
     'DeviceSelection',
+    'OptionsWidget',
     'ScanRoot',
 ]
 

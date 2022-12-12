@@ -106,6 +106,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="toolTip">
+         <string>Use this scanner</string>
+        </property>
         <property name="text">
          <string/>
         </property>

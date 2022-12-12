@@ -31,6 +31,7 @@ class ScanRoot : public QWidget {
     virtual ~ScanRoot();
 
     void setMainWindow(MainWindow *_mainWindow) { mainWindow = _mainWindow; }
+    [[nodiscard]] MainWindow *getMainWindow() const { return mainWindow; }
 
     void updateSaneDevice(std::unique_ptr<lib::SaneDevice> device);
 
