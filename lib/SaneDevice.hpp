@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SaneOption.hpp"
+#include "SaneOptionsWrapper.hpp"
 #include <sane/sane.h>
 #include <string>
 #include <vector>
@@ -17,7 +18,9 @@ class SaneDevice {
 
     SANE_Handle handle = nullptr;
 
-    std::vector<SaneOption> options;
+    std::vector<SaneOption> rawOptions;
+
+    SaneOptionsWrapper options;
 
   public:
 
@@ -27,18 +30,21 @@ class SaneDevice {
     void connect();
     void reload_options();
 
+    [[nodiscard]] const std::string  &getName() const { return name; }
+    [[nodiscard]] const std::string  &getVendor() const { return vendor; }
+    [[nodiscard]] const std::string  &getModel() const { return model; }
+    [[nodiscard]] const std::string  &getType() const { return type; }
+    [[nodiscard]] SaneOptionsWrapper &getOptions() { return options; }
+    [[nodiscard]] SANE_Handle         getHandle() { return handle; }
+
+
+    // No copy or move
+
     SaneDevice(const SaneDevice &) = delete;
     SaneDevice(SaneDevice &&)      = delete;
 
     SaneDevice &operator=(const SaneDevice &) = delete;
     SaneDevice &operator=(SaneDevice &&)      = delete;
-
-    [[nodiscard]] const std::string             &getName() const { return name; }
-    [[nodiscard]] const std::string             &getVendor() const { return vendor; }
-    [[nodiscard]] const std::string             &getModel() const { return model; }
-    [[nodiscard]] const std::string             &getType() const { return type; }
-    [[nodiscard]] const std::vector<SaneOption> &getOptions() const { return options; }
-    [[nodiscard]] SANE_Handle                    getHandle() { return handle; }
 };
 
 } // namespace qscan::lib

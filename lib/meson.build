@@ -4,6 +4,7 @@ qscan_lib_src = files([
     'SaneDevice.cpp',
     'SaneException.cpp',
     'SaneOption.cpp',
+    'SaneOptionsWrapper.cpp',
 ])
 
 qscan_lib_src += configure_file(

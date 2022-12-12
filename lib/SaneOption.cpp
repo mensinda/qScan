@@ -90,4 +90,41 @@ void SaneOption::reloadValue() {
     }
 }
 
+bool SaneOption::setValue(std::variant<bool, int, double, std::string> newValue) {
+    SANE_Int info;
+    switch (type) {
+        case SANE_TYPE_INT:
+            {
+                SANE_Int val = get<int>(newValue);
+                exceptional_control_option(SANE_ACTION_SET_VALUE, &val, &info);
+                break;
+            }
+        case SANE_TYPE_FIXED: {
+                SANE_Fixed val = SANE_FIX(get<double>(newValue));
+                exceptional_control_option(SANE_ACTION_SET_VALUE, &val, &info);
+                break;
+            }
+        case SANE_TYPE_BOOL: {
+                SANE_Bool val = get<bool>(newValue) ? SANE_TRUE : SANE_FALSE;
+                exceptional_control_option(SANE_ACTION_SET_VALUE, &val, &info);
+                break;
+            }
+        case SANE_TYPE_STRING: {
+                SANE_String val = const_cast<SANE_String>(get<std::string>(newValue).c_str());
+                exceptional_control_option(SANE_ACTION_SET_VALUE, val, &info);
+                break;
+            }
+        default: throw std::runtime_error("Unsupported option type " + enum2str::toStr(type));
+    }
+
+
+    if ((info & SANE_INFO_RELOAD_OPTIONS) == SANE_INFO_RELOAD_OPTIONS) {
+        device->reload_options();
+        return true;
+    }
+
+    reloadValue();
+    return false;
+}
+
 } // namespace qscan::lib

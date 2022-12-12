@@ -59,6 +59,22 @@ class SaneOption {
 
     void reloadValue();
 
+    [[nodiscard]] const std::string   &getName() const { return name; }
+    [[nodiscard]] const std::string   &getTitle() const { return title; }
+    [[nodiscard]] const std::string   &getDesc() const { return desc; }
+    [[nodiscard]] SANE_Constraint_Type getConstraintType() const { return constraintType; }
+    [[nodiscard]] SANE_Value_Type      getType() const { return type; }
+    [[nodiscard]] SANE_Unit            getUnit() const { return unit; }
+
+    [[nodiscard]] const std::variant<RangeInt, RangeDouble, std::vector<SANE_Word>, std::vector<std::string>>
+        &getConstraint() const {
+        return constraint;
+    }
+
+    [[nodiscard]] const std::variant<bool, int, double, std::string> &getValue() const { return value; }
+
+    [[nodiscard]] bool setValue(std::variant<bool, int, double, std::string> newValue);
+
     SaneOption(const SaneOption &) = delete;
     SaneOption(SaneOption &&)      = default;
 

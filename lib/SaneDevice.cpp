@@ -6,7 +6,7 @@
 namespace qscan::lib {
 
 SaneDevice::SaneDevice(const SANE_Device *device)
-    : name(device->name), vendor(device->vendor), model(device->model), type(device->type) {}
+    : name(device->name), vendor(device->vendor), model(device->model), type(device->type), options(&rawOptions) {}
 
 SaneDevice::~SaneDevice() {
     if (handle) {
@@ -34,7 +34,7 @@ void SaneDevice::connect() {
 void SaneDevice::reload_options() {
     logger_t log = logger();
 
-    options.clear();
+    rawOptions.clear();
 
     SANE_Int     nopts  = 0;
     SANE_Status status = sane_control_option(handle, 0, SANE_ACTION_GET_VALUE, &nopts, nullptr);
@@ -52,8 +52,10 @@ void SaneDevice::reload_options() {
                   enum2str::toStr(opt_desc->type),
                   enum2str::toStr(opt_desc->unit),
                   enum2str::SaneOption_OptionCap_toStr(opt_desc->cap));
-        options.emplace_back(this, i, opt_desc);
+        rawOptions.emplace_back(this, i, opt_desc);
     }
+
+    options.refreshFilter();
 }
 
 } // namespace qscan::lib
