@@ -26,7 +26,7 @@
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="common">
       <property name="geometry">
@@ -126,6 +126,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="scanArea">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>476</width>
+        <height>378</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>Scan area</string>
       </attribute>
