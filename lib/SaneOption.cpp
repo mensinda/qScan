@@ -52,11 +52,25 @@ SaneOption::SaneOption(SaneDevice *_device, SANE_Int _index, const SANE_Option_D
             }
         case SANE_CONSTRAINT_WORD_LIST:
             {
-                std::vector<SANE_Word> tmp;
-                for (const SANE_Word *word = optionDescriptor->constraint.word_list; *word; word++) {
-                    tmp.emplace_back(*word);
+                const SANE_Word *word_list  = optionDescriptor->constraint.word_list;
+                const SANE_Word  clist_size = word_list[0];
+                if (type == SANE_TYPE_INT) {
+                    std::vector<int> tmp(clist_size);
+                    for (int i = 1; i <= clist_size; ++i) {
+                        tmp[i - 1] = word_list[i];
+                    }
+                    constraint = tmp;
+                } else if (type == SANE_TYPE_FIXED) {
+                    std::vector<double> tmp(clist_size);
+                    for (int i = 1; i <= clist_size; ++i) {
+                        tmp[i - 1] = SANE_UNFIX(word_list[i]);
+                    }
+                    constraint = tmp;
+                } else {
+                    throw std::runtime_error(fmt::format("Invalid type {} for constraint {}",
+                                                         enum2str::toStr(type),
+                                                         enum2str::toStr(constraintType)));
                 }
-                constraint = tmp;
                 break;
             }
         case SANE_CONSTRAINT_NONE: break;
@@ -90,7 +104,7 @@ void SaneOption::reloadValue() {
     }
 }
 
-bool SaneOption::setValue(std::variant<bool, int, double, std::string> newValue) {
+bool SaneOption::setValue(value_t newValue) {
     SANE_Int info;
     switch (type) {
         case SANE_TYPE_INT:
@@ -99,17 +113,20 @@ bool SaneOption::setValue(std::variant<bool, int, double, std::string> newValue)
                 exceptional_control_option(SANE_ACTION_SET_VALUE, &val, &info);
                 break;
             }
-        case SANE_TYPE_FIXED: {
+        case SANE_TYPE_FIXED:
+            {
                 SANE_Fixed val = SANE_FIX(get<double>(newValue));
                 exceptional_control_option(SANE_ACTION_SET_VALUE, &val, &info);
                 break;
             }
-        case SANE_TYPE_BOOL: {
+        case SANE_TYPE_BOOL:
+            {
                 SANE_Bool val = get<bool>(newValue) ? SANE_TRUE : SANE_FALSE;
                 exceptional_control_option(SANE_ACTION_SET_VALUE, &val, &info);
                 break;
             }
-        case SANE_TYPE_STRING: {
+        case SANE_TYPE_STRING:
+            {
                 SANE_String val = const_cast<SANE_String>(get<std::string>(newValue).c_str());
                 exceptional_control_option(SANE_ACTION_SET_VALUE, val, &info);
                 break;

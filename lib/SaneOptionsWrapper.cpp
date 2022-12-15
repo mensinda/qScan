@@ -1,5 +1,6 @@
 #include "SaneOptionsWrapper.hpp"
 #include "constStringHash.hpp"
+#include "qscan_log.hpp"
 #include <algorithm>
 #include <stdexcept>
 
@@ -27,7 +28,9 @@ void SaneOptionsWrapper::refreshFilter() {
 }
 
 std::optional<SaneOptionsWrapper::ScanAreaData> SaneOptionsWrapper::getScanArea() {
-    if (topLeftXIdx < 0 || topLeftYIdx < 0 || bottomRightXIdx < 0 || bottomRightYIdx < 0) { return {}; }
+    if (topLeftXIdx < 0 || topLeftYIdx < 0 || bottomRightXIdx < 0 || bottomRightYIdx < 0) {
+        return {};
+    }
 
     // Just make my life a bit easier
     std::vector<SaneOption> &opts = *allOptions;
@@ -80,53 +83,68 @@ std::optional<SaneOptionsWrapper::ScanAreaData> SaneOptionsWrapper::getScanArea(
 }
 
 std::optional<SaneOptionsWrapper::GenericOptionData<std::string>> SaneOptionsWrapper::getSource() {
-    if (sourceIdx < 0) { return {}; }
+    if (sourceIdx < 0) {
+        return {};
+    }
 
     SaneOption &opt = (*allOptions)[sourceIdx];
     if (opt.getConstraintType() == SANE_CONSTRAINT_STRING_LIST) {
         return GenericOptionData<std::string>{get<std::string>(opt.getValue()),
-                                              get<std::vector<std::string>>(opt.getConstraint())};
+                                              get<std::vector<std::string>>(opt.getConstraint()),
+                                              opt.getTitle(),
+                                              opt.getDesc()};
     }
 
-    return GenericOptionData<std::string>{get<std::string>(opt.getValue()), {}};
+    return GenericOptionData<std::string>{get<std::string>(opt.getValue()), {}, opt.getTitle(), opt.getDesc()};
 }
 
 std::optional<SaneOptionsWrapper::GenericOptionData<std::string>> SaneOptionsWrapper::getMode() {
-    if (modeIdx < 0) { return {}; }
+    if (modeIdx < 0) {
+        return {};
+    }
 
     SaneOption &opt = (*allOptions)[modeIdx];
     if (opt.getConstraintType() == SANE_CONSTRAINT_STRING_LIST) {
         return GenericOptionData<std::string>{get<std::string>(opt.getValue()),
-                                              get<std::vector<std::string>>(opt.getConstraint())};
+                                              get<std::vector<std::string>>(opt.getConstraint()),
+                                              opt.getTitle(),
+                                              opt.getDesc()};
     }
 
-    return GenericOptionData<std::string>{get<std::string>(opt.getValue()), {}};
+    return GenericOptionData<std::string>{get<std::string>(opt.getValue()), {}, opt.getTitle(), opt.getDesc()};
 }
 
 std::optional<SaneOptionsWrapper::GenericOptionData<double>> SaneOptionsWrapper::getResolution() {
-    if (resolutionIdx < 0) { return {}; }
-
-    SaneOption &opt = (*allOptions)[modeIdx];
-    if (opt.getConstraintType() == SANE_CONSTRAINT_WORD_LIST) {
-        std::vector<SANE_Word> tmp = get<std::vector<SANE_Word>>(opt.getConstraint());
-        std::vector<double>    res;
-
-        std::transform(tmp.begin(), tmp.end(), std::back_inserter(res), [&opt](SANE_Word w) {
-            if (opt.getType() == SANE_TYPE_FIXED) {
-                return SANE_UNFIX(w);
-            } else {
-                return (double)w;
-            }
-        });
-
-        return GenericOptionData<double>{get<double>(opt.getValue()), res};
+    if (resolutionIdx < 0) {
+        return {};
     }
 
-    return GenericOptionData<double>{get<double>(opt.getValue()), {}};
+    const SaneOption &opt   = (*allOptions)[resolutionIdx];
+    const double      value = opt.getType() == SANE_TYPE_FIXED ? get<double>(opt.getValue()) : get<int>(opt.getValue());
+
+    if (opt.getConstraintType() == SANE_CONSTRAINT_WORD_LIST) {
+        if (opt.getType() == SANE_TYPE_FIXED) {
+            return GenericOptionData<double>{
+                value,
+                get<std::vector<double>>(opt.getConstraint()),
+                opt.getTitle(),
+                opt.getDesc(),
+            };
+        }
+        std::vector<int>    tmp = get<std::vector<int>>(opt.getConstraint());
+        std::vector<double> res;
+
+        std::transform(tmp.begin(), tmp.end(), std::back_inserter(res), [](int i) { return (double)i; });
+        return GenericOptionData<double>{value, res, opt.getTitle(), opt.getDesc()};
+    }
+
+    return GenericOptionData<double>{value, {}, opt.getTitle(), opt.getDesc()};
 }
 
 bool SaneOptionsWrapper::setSource(std::string source) {
-    if (sourceIdx < 0) { throw std::runtime_error("Unable to set source (option does not exist)"); }
+    if (sourceIdx < 0) {
+        throw std::runtime_error("Unable to set source (option does not exist)");
+    }
 
     if ((*allOptions)[sourceIdx].setValue(source)) {
         refreshFilter();
@@ -137,7 +155,9 @@ bool SaneOptionsWrapper::setSource(std::string source) {
 }
 
 bool SaneOptionsWrapper::setMode(std::string mode) {
-    if (modeIdx < 0) { throw std::runtime_error("Unable to set mode (option does not exist)"); }
+    if (modeIdx < 0) {
+        throw std::runtime_error("Unable to set mode (option does not exist)");
+    }
 
     if ((*allOptions)[modeIdx].setValue(mode)) {
         refreshFilter();
@@ -148,9 +168,18 @@ bool SaneOptionsWrapper::setMode(std::string mode) {
 }
 
 bool SaneOptionsWrapper::setResolution(double resolution) {
-    if (resolutionIdx < 0) { throw std::runtime_error("Unable to set resolution (option does not exist)"); }
+    if (resolutionIdx < 0) {
+        throw std::runtime_error("Unable to set resolution (option does not exist)");
+    }
 
-    if ((*allOptions)[resolutionIdx].setValue(resolution)) {
+    SaneOption &opt = (*allOptions)[resolutionIdx];
+    SaneOption::value_t val;
+    if (opt.getType() == SANE_TYPE_INT) {
+        val = (int)resolution;
+    } else {
+        val = resolution;
+    }
+    if (opt.setValue(val)) {
         refreshFilter();
         return true;
     }
@@ -169,7 +198,9 @@ bool SaneOptionsWrapper::setScanArea(SaneOptionsWrapper::ScanArea area) {
     refresh |= (*allOptions)[topLeftXIdx].setValue(area.topLeftX);
     refresh |= (*allOptions)[topLeftYIdx].setValue(area.topLeftY);
 
-    if (refresh) { refreshFilter(); }
+    if (refresh) {
+        refreshFilter();
+    }
 
     return refresh;
 }

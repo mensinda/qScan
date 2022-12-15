@@ -77,6 +77,9 @@ void ScanRoot::deviceConnected() {
     ui->btnScanBatch->setEnabled(true);
     ui->mainTabs->setEnabled(true);
     ui->cfgRootWidget->setEnabled(true);
+
+    // Initially populate options
+    ui->settings->reloadOptions();
 }
 
 void ScanRoot::connectionFailed() {

@@ -1,6 +1,7 @@
 #include "config/QScanConfig.hpp"
 #include "widgets/MainWindow.hpp"
 #include "SaneException.hpp"
+#include "qscan_log.hpp"
 
 #include <QApplication>
 
@@ -9,6 +10,8 @@ using namespace qscan::gui;
 using namespace qscan::lib;
 
 int main(int argc, char *argv[]) {
+    logger()->set_level(spdlog::level::debug);
+
     QApplication a(argc, argv);
 
     QScanConfig cfg{};

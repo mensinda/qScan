@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>488</width>
-    <height>522</height>
+    <width>300</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -33,8 +33,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>476</width>
-        <height>378</height>
+        <width>290</width>
+        <height>335</height>
        </rect>
       </property>
       <attribute name="label">
@@ -55,7 +55,7 @@
         </spacer>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="lc2">
+        <widget class="QLabel" name="lMode">
          <property name="text">
           <string>Color mode:</string>
          </property>
@@ -97,14 +97,14 @@
         <widget class="QComboBox" name="coResolution"/>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="lc1">
+        <widget class="QLabel" name="lSource">
          <property name="text">
           <string>Document source:</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="lc3">
+        <widget class="QLabel" name="lResolution">
          <property name="text">
           <string>Resolution:</string>
          </property>
@@ -130,8 +130,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>476</width>
-        <height>378</height>
+        <width>303</width>
+        <height>356</height>
        </rect>
       </property>
       <attribute name="label">
@@ -253,8 +253,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>476</width>
-        <height>378</height>
+        <width>325</width>
+        <height>335</height>
        </rect>
       </property>
       <attribute name="label">
@@ -279,6 +279,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QSpinBox" name="batchDelay">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="suffix">
           <string>s</string>
          </property>
@@ -312,6 +315,9 @@
        </item>
        <item row="1" column="2">
         <widget class="QSlider" name="batchDelayS">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="maximum">
           <number>120</number>
          </property>
@@ -327,9 +333,6 @@
         <widget class="QCheckBox" name="batchDelayCB">
          <property name="text">
           <string>Delay beteen scans:</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -353,8 +356,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>476</width>
-        <height>378</height>
+        <width>303</width>
+        <height>356</height>
        </rect>
       </property>
       <attribute name="label">

@@ -33,6 +33,10 @@ class SaneOption {
         double step;
     };
 
+    using value_t = std::variant<bool, int, double, std::string>;
+    using constraint_t =
+        std::variant<RangeInt, RangeDouble, std::vector<int>, std::vector<double>, std::vector<std::string>>;
+
   private:
     SaneDevice *device;
     SANE_Int    index;
@@ -47,8 +51,8 @@ class SaneOption {
     SANE_Int caps;
     SANE_Int size;
 
-    std::variant<RangeInt, RangeDouble, std::vector<SANE_Word>, std::vector<std::string>> constraint;
-    std::variant<bool, int, double, std::string>                                          value;
+    constraint_t constraint;
+    value_t      value;
 
   private:
     void exceptional_control_option(SANE_Action action, void *value, SANE_Int *info);
@@ -65,15 +69,10 @@ class SaneOption {
     [[nodiscard]] SANE_Constraint_Type getConstraintType() const { return constraintType; }
     [[nodiscard]] SANE_Value_Type      getType() const { return type; }
     [[nodiscard]] SANE_Unit            getUnit() const { return unit; }
+    [[nodiscard]] const constraint_t  &getConstraint() const { return constraint; }
+    [[nodiscard]] const value_t       &getValue() const { return value; }
 
-    [[nodiscard]] const std::variant<RangeInt, RangeDouble, std::vector<SANE_Word>, std::vector<std::string>>
-        &getConstraint() const {
-        return constraint;
-    }
-
-    [[nodiscard]] const std::variant<bool, int, double, std::string> &getValue() const { return value; }
-
-    [[nodiscard]] bool setValue(std::variant<bool, int, double, std::string> newValue);
+    [[nodiscard]] bool setValue(value_t newValue);
 
     SaneOption(const SaneOption &) = delete;
     SaneOption(SaneOption &&)      = default;

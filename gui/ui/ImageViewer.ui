@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ImageViewer</class>
+ <widget class="QWidget" name="ImageViewer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>776</width>
+    <height>577</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="qscan::gui::ScanImageView" name="viewer">
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="lZoom">
+       <property name="text">
+        <string>Zoom:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="zoomIn">
+       <property name="toolTip">
+        <string>Zoom in</string>
+       </property>
+       <property name="icon">
+        <iconset theme="zoom-in"/>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="zoom">
+       <property name="minimum">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>10.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="zoomOut">
+       <property name="toolTip">
+        <string>Zoom out</string>
+       </property>
+       <property name="icon">
+        <iconset theme="zoom-out"/>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="zoomFit">
+       <property name="toolTip">
+        <string>Zoom to fit</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="zoom-fit-best"/>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="zomm100">
+       <property name="toolTip">
+        <string>Zoom to original size</string>
+       </property>
+       <property name="icon">
+        <iconset theme="zoom-original"/>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="clearSelection">
+       <property name="text">
+        <string>Clear Selection</string>
+       </property>
+       <property name="icon">
+        <iconset theme="edit-clear"/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qscan::gui::ScanImageView</class>
+   <extends>QGraphicsView</extends>
+   <header>ScanImageView.hpp</header>
+   <slots>
+    <signal>zoomUpdated(double)</signal>
+    <signal>selectionChanged()</signal>
+    <slot>zoomIn()</slot>
+    <slot>zoomOut()</slot>
+    <slot>zoomSet(double)</slot>
+    <slot>zoomFit()</slot>
+    <slot>zoomOriginal()</slot>
+    <slot>selectionClear()</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>zoom</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>viewer</receiver>
+   <slot>zoomSet(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>144</x>
+     <y>552</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomFit</sender>
+   <signal>clicked()</signal>
+   <receiver>viewer</receiver>
+   <slot>zoomFit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>254</x>
+     <y>551</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zomm100</sender>
+   <signal>clicked()</signal>
+   <receiver>viewer</receiver>
+   <slot>zoomOriginal()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>551</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomIn</sender>
+   <signal>clicked()</signal>
+   <receiver>viewer</receiver>
+   <slot>zoomIn()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>551</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>zoomOut</sender>
+   <signal>clicked()</signal>
+   <receiver>viewer</receiver>
+   <slot>zoomOut()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>208</x>
+     <y>551</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewer</sender>
+   <signal>zoomUpdated(double)</signal>
+   <receiver>zoom</receiver>
+   <slot>setValue(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>144</x>
+     <y>552</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearSelection</sender>
+   <signal>clicked()</signal>
+   <receiver>viewer</receiver>
+   <slot>selectionClear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>690</x>
+     <y>552</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewer</sender>
+   <signal>selectionChanged()</signal>
+   <receiver>ImageViewer</receiver>
+   <slot>selectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>387</x>
+     <y>266</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>selectionChanged()</slot>
+ </slots>
+</ui>

@@ -26,6 +26,8 @@ class SaneOptionsWrapper {
     struct GenericOptionData {
         T              current;
         std::vector<T> values;
+        std::string    title;
+        std::string    description;
     };
 
   private:

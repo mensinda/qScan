@@ -47,10 +47,11 @@ void SaneDevice::reload_options() {
         const SANE_Option_Descriptor *opt_desc = sane_get_option_descriptor(handle, i);
         if (opt_desc->type == SANE_TYPE_GROUP) { continue; }
 
-        log->info("[Sane]  -- {:<16}: {:<16} | {:<16} -- {}",
+        log->info("[Sane]  -- {:<16}: {:<16} | {:<16} | {:<24} -- {}",
                   opt_desc->name ?: "",
                   enum2str::toStr(opt_desc->type),
                   enum2str::toStr(opt_desc->unit),
+                  enum2str::toStr(opt_desc->constraint_type),
                   enum2str::SaneOption_OptionCap_toStr(opt_desc->cap));
         rawOptions.emplace_back(this, i, opt_desc);
     }

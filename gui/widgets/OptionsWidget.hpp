@@ -35,6 +35,8 @@ class OptionsWidget : public QWidget {
     void resolutionUpdated();
     void batchSettingsUpdated();
     void scanAreaUpdated();
+
+    void reloadOptions();
 };
 
 } // namespace qscan::gui
