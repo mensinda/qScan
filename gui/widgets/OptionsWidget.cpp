@@ -8,9 +8,7 @@ using namespace qscan::lib;
 
 namespace qscan::gui {
 
-OptionsWidget::OptionsWidget(QWidget *_parent) : QWidget(_parent), ui(new Ui::OptionsWidget) {
-    ui->setupUi(this);
-}
+OptionsWidget::OptionsWidget(QWidget *_parent) : QWidget(_parent), ui(new Ui::OptionsWidget) { ui->setupUi(this); }
 
 OptionsWidget::~OptionsWidget() {}
 
@@ -29,7 +27,7 @@ void OptionsWidget::reloadOptions() {
     // Source
     ui->coSource->blockSignals(true);
     ui->coSource->clear();
-    ui->coSource->setEnabled((bool) sourceOpt);
+    ui->coSource->setEnabled((bool)sourceOpt);
     if (sourceOpt) {
         for (const auto &i : sourceOpt->values) {
             ui->coSource->addItem(QString::fromStdString(i));
@@ -43,7 +41,7 @@ void OptionsWidget::reloadOptions() {
     // Mode
     ui->coMode->blockSignals(true);
     ui->coMode->clear();
-    ui->coMode->setEnabled((bool) modeOpt);
+    ui->coMode->setEnabled((bool)modeOpt);
     if (modeOpt) {
         for (const auto &i : modeOpt->values) {
             ui->coMode->addItem(QString::fromStdString(i));
@@ -57,12 +55,13 @@ void OptionsWidget::reloadOptions() {
     // Resolution
     ui->coResolution->blockSignals(true);
     ui->coResolution->clear();
-    ui->coResolution->setEnabled((bool) modeOpt);
+    ui->coResolution->setEnabled((bool)modeOpt);
     if (modeOpt) {
         for (const double i : resolutionOpt->values) {
-            ui->coResolution->addItem(QString::number((int) i), QVariant(i));
+            auto displayStr = fmt::format("{} {}", (int)i, SaneBackend::saneUnitToDisplayString(resolutionOpt->unit));
+            ui->coResolution->addItem(QString::fromStdString(displayStr), QVariant(i));
         }
-        ui->coResolution->setCurrentText(QString::number((int) resolutionOpt->current));
+        ui->coResolution->setCurrentText(QString::number((int)resolutionOpt->current));
         ui->coResolution->setToolTip(QString::fromStdString(resolutionOpt->description));
         ui->lResolution->setToolTip(QString::fromStdString(resolutionOpt->description));
     }

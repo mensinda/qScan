@@ -51,5 +51,13 @@ void SelectionOverlay::updateSelection(QRect _selection) {
     update();
 }
 
+void SelectionOverlay::updateImageRect(QRect _imgBounds) {
+    imgBounds = _imgBounds;
+    if (selection.isNull()) {
+        return ;
+    }
+    selection = selection.intersected(imgBounds);
+}
+
 
 } // namespace qscan::gui

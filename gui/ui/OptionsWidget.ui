@@ -130,7 +130,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>303</width>
+        <width>288</width>
         <height>356</height>
        </rect>
       </property>
@@ -139,11 +139,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="3" column="2">
-        <widget class="QDoubleSpinBox" name="bottomRight">
-         <property name="suffix">
-          <string>mm</string>
-         </property>
-        </widget>
+        <widget class="QDoubleSpinBox" name="bottomRight"/>
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="sal2">
@@ -206,25 +202,13 @@
         </spacer>
        </item>
        <item row="2" column="2">
-        <widget class="QDoubleSpinBox" name="bottomLeft">
-         <property name="suffix">
-          <string>mm</string>
-         </property>
-        </widget>
+        <widget class="QDoubleSpinBox" name="bottomLeft"/>
        </item>
        <item row="0" column="2">
-        <widget class="QDoubleSpinBox" name="topLeft">
-         <property name="suffix">
-          <string>mm</string>
-         </property>
-        </widget>
+        <widget class="QDoubleSpinBox" name="topLeft"/>
        </item>
        <item row="1" column="2">
-        <widget class="QDoubleSpinBox" name="topRight">
-         <property name="suffix">
-          <string>mm</string>
-         </property>
-        </widget>
+        <widget class="QDoubleSpinBox" name="topRight"/>
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="sal1">
@@ -356,7 +340,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>303</width>
+        <width>288</width>
         <height>356</height>
        </rect>
       </property>

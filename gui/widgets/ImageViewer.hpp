@@ -21,7 +21,7 @@ class ImageViewer : public QWidget {
     virtual ~ImageViewer();
 
   public slots:
-    void selectionChanged();
+    void selectionChanged(QRect _selectionRect);
 
 };
 

@@ -142,7 +142,7 @@
    <header>ScanImageView.hpp</header>
    <slots>
     <signal>zoomUpdated(double)</signal>
-    <signal>selectionChanged()</signal>
+    <signal>selectionChanged(QRect)</signal>
     <slot>zoomIn()</slot>
     <slot>zoomOut()</slot>
     <slot>zoomSet(double)</slot>
@@ -268,9 +268,9 @@
   </connection>
   <connection>
    <sender>viewer</sender>
-   <signal>selectionChanged()</signal>
+   <signal>selectionChanged(QRect)</signal>
    <receiver>ImageViewer</receiver>
-   <slot>selectionChanged()</slot>
+   <slot>selectionChanged(QRect)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>387</x>
@@ -284,6 +284,6 @@
   </connection>
  </connections>
  <slots>
-  <slot>selectionChanged()</slot>
+  <slot>selectionChanged(QRect)</slot>
  </slots>
 </ui>

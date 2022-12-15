@@ -9,10 +9,9 @@ class ScanImageView : public QGraphicsView {
     Q_OBJECT
 
   private:
-    QGraphicsScene      *scanScene{};
-    QImage              *image{};
-    QGraphicsPixmapItem *imagePixmap{};
-    SelectionOverlay    *overlay{};
+    std::unique_ptr<QGraphicsScene>      scanScene;
+    std::unique_ptr<QGraphicsPixmapItem> imagePixmap;
+    std::unique_ptr<SelectionOverlay>    overlay;
 
     QPoint selectionStart{};
 
@@ -20,7 +19,9 @@ class ScanImageView : public QGraphicsView {
     explicit ScanImageView(QWidget *parent);
     virtual ~ScanImageView();
 
-    double getScale() const;
+    [[nodiscard]] double getScale() const;
+
+    void updateImage(const QImage &_img);
 
   public slots:
     void zoomIn();
@@ -33,16 +34,17 @@ class ScanImageView : public QGraphicsView {
 
   signals:
     void zoomUpdated(double _value);
-    void selectionChanged();
+    void selectionChanged(QRect _selectionRect);
 
   protected:
     void drawBackground(QPainter *painter, const QRectF &rect) override;
 
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
   private:
-    QPoint clipPoint(const QPoint &p) const;
+    [[nodiscard]] QPoint clipPoint(const QPoint &p) const;
 };
 
 } // namespace qscan::gui

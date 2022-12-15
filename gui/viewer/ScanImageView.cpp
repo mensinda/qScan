@@ -8,27 +8,33 @@ using namespace qscan::lib;
 namespace qscan::gui {
 
 ScanImageView::ScanImageView(QWidget *parent) : QGraphicsView(parent) {
-    image       = new QImage(QString::fromStdString("/home/daniel/tmp.png"));
-    imagePixmap = new QGraphicsPixmapItem(QPixmap::fromImage(*image));
-    imagePixmap->setZValue(0);
-
-    overlay = new SelectionOverlay(image->rect());
+    overlay = std::make_unique<SelectionOverlay>(QRect{0, 0, 210, 297});
     overlay->setZValue(1);
-    overlay->updateSelection(QRect(image->width() / 4, image->height() / 4, image->width() / 2, image->height() / 2));
 
-    scanScene = new QGraphicsScene(this);
-    scanScene->setSceneRect(0, 0, image->width(), image->height());
+    scanScene = std::make_unique<QGraphicsScene>(this);
+    scanScene->addItem(overlay.get());
 
-    scanScene->addItem(imagePixmap);
-    scanScene->addItem(overlay);
+    QImage img{210, 297, QImage::Format_RGB32};
+    img.fill(Qt::white);
+    updateImage(img);
 
-    setScene(scanScene);
+    setScene(scanScene.get());
 }
 
 ScanImageView::~ScanImageView() {}
 
+void ScanImageView::updateImage(const QImage &_img) {
+    imagePixmap = std::make_unique<QGraphicsPixmapItem>(QPixmap::fromImage(_img));
+    imagePixmap->setZValue(0);
+
+    overlay->updateImageRect(imagePixmap->boundingRect().toRect());
+
+    scanScene->setSceneRect(imagePixmap->boundingRect().toRect());
+    scanScene->addItem(imagePixmap.get());
+}
+
 void ScanImageView::drawBackground(QPainter *painter, const QRectF &rect) {
-    painter->fillRect(rect, QWidget::palette().color(QPalette::Shadow));
+    painter->fillRect(rect, Qt::darkGray);
 }
 
 double ScanImageView::getScale() const {
@@ -39,7 +45,7 @@ double ScanImageView::getScale() const {
 
 void ScanImageView::zoomFit() {
     const double oldScale = getScale();
-    fitInView(imagePixmap, Qt::KeepAspectRatio);
+    fitInView(imagePixmap.get(), Qt::KeepAspectRatio);
     const double newScale = getScale();
     if (oldScale != newScale) {
         emit zoomUpdated(newScale);
@@ -72,11 +78,11 @@ void ScanImageView::selectionClear() {
     }
 
     overlay->updateSelection(QRect());
-    emit selectionChanged();
+    emit selectionChanged(overlay->getSelection());
 }
 
 
-QPoint ScanImageView::clipPoint(QPoint const& p) const {
+QPoint ScanImageView::clipPoint(const QPoint &p) const {
     int x = std::min((int)imagePixmap->boundingRect().width(), std::max(0, p.x()));
     int y = std::min((int)imagePixmap->boundingRect().height(), std::max(0, p.y()));
     return {x, y};
@@ -93,6 +99,11 @@ void ScanImageView::mouseMoveEvent(QMouseEvent *event) {
     QPoint p = clipPoint(mapToScene(event->localPos().toPoint()).toPoint());
     overlay->updateSelection(QRect(selectionStart, p).normalized());
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void ScanImageView::mouseReleaseEvent(QMouseEvent *event) {
+    emit selectionChanged(overlay->getSelection());
+    QGraphicsView::mouseReleaseEvent(event);
 }
 
 } // namespace qscan::gui

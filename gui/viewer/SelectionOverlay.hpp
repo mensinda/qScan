@@ -22,10 +22,12 @@ class SelectionOverlay : public QGraphicsItem {
      */
     void updateSelection(QRect _selection);
 
-    [[nodiscard]] const QRect &getSelection() const { return selection; }
+    void updateImageRect(QRect _imgBounds);
 
-    QRectF boundingRect() const override;
-    void   paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    [[nodiscard]] const QRect &getSelection() const { return selection; }
+    [[nodiscard]] QRectF       boundingRect() const override;
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 } // namespace qscan::gui

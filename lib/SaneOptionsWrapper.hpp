@@ -28,6 +28,7 @@ class SaneOptionsWrapper {
         std::vector<T> values;
         std::string    title;
         std::string    description;
+        SANE_Unit      unit;
     };
 
   private:

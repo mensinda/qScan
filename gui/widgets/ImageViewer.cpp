@@ -14,8 +14,12 @@ ImageViewer::ImageViewer(QWidget *_parent) : QWidget(_parent), ui(new Ui::ImageV
 
 ImageViewer::~ImageViewer() {}
 
-void ImageViewer::selectionChanged() {
-    logger()->debug("Selection changed");
+void ImageViewer::selectionChanged(QRect _selectionRect) {
+    logger()->debug("Selection changed: {}x{} {}x{}",
+                    _selectionRect.x(),
+                    _selectionRect.y(),
+                    _selectionRect.width(),
+                    _selectionRect.height());
 }
 
-}
+} // namespace qscan::gui

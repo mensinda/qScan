@@ -20,7 +20,9 @@ SaneBackend::SaneBackend(std::function<SaneAuthResult(std::string)> authCallback
         std::strncpy(password, password_str.c_str(), SANE_MAX_PASSWORD_LEN);
     });
 
-    if (status != SANE_STATUS_GOOD) { throw SaneException(status, "sane_init failed"); }
+    if (status != SANE_STATUS_GOOD) {
+        throw SaneException(status, "sane_init failed");
+    }
 
     logger()->info("[Sane] initialized (version = {})", saneVersionStr());
 }
@@ -40,7 +42,9 @@ SaneBackend::DeviceList SaneBackend::find_devices() {
     const SANE_Device **sane_device_list;
     const SANE_Status   status = sane_get_devices(&sane_device_list, SANE_FALSE);
 
-    if (status != SANE_STATUS_GOOD) { throw SaneException(status, "Failed to get sane devices"); }
+    if (status != SANE_STATUS_GOOD) {
+        throw SaneException(status, "Failed to get sane devices");
+    }
 
     const SANE_Device *sane_device = *sane_device_list;
 
@@ -67,6 +71,19 @@ std::string SaneBackend::saneVersionStr() {
                        SANE_VERSION_MAJOR(version),
                        SANE_VERSION_MINOR(version),
                        SANE_VERSION_BUILD(version));
+}
+
+std::string SaneBackend::saneUnitToDisplayString(SANE_Unit unit) {
+    switch (unit) {
+        case SANE_UNIT_BIT: return "bit";
+        case SANE_UNIT_DPI: return "DPI";
+        case SANE_UNIT_MICROSECOND: return "μs";
+        case SANE_UNIT_MM: return "mm";
+        case SANE_UNIT_PERCENT: return "%";
+        case SANE_UNIT_PIXEL: return "px";
+        case SANE_UNIT_NONE: return "";
+        default: return "UNKNOWN";
+    }
 }
 
 } // namespace qscan::lib

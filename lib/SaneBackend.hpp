@@ -34,6 +34,8 @@ class SaneBackend {
     [[nodiscard]] DeviceList find_devices();
     [[nodiscard]] int saneVersion();
     [[nodiscard]] std::string saneVersionStr();
+
+    [[nodiscard]] static std::string saneUnitToDisplayString(SANE_Unit unit);
 };
 
 } // namespace qscan::lib

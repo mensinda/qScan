@@ -89,13 +89,22 @@ std::optional<SaneOptionsWrapper::GenericOptionData<std::string>> SaneOptionsWra
 
     SaneOption &opt = (*allOptions)[sourceIdx];
     if (opt.getConstraintType() == SANE_CONSTRAINT_STRING_LIST) {
-        return GenericOptionData<std::string>{get<std::string>(opt.getValue()),
-                                              get<std::vector<std::string>>(opt.getConstraint()),
-                                              opt.getTitle(),
-                                              opt.getDesc()};
+        return GenericOptionData<std::string>{
+            get<std::string>(opt.getValue()),
+            get<std::vector<std::string>>(opt.getConstraint()),
+            opt.getTitle(),
+            opt.getDesc(),
+            opt.getUnit(),
+        };
     }
 
-    return GenericOptionData<std::string>{get<std::string>(opt.getValue()), {}, opt.getTitle(), opt.getDesc()};
+    return GenericOptionData<std::string>{
+        get<std::string>(opt.getValue()),
+        {},
+        opt.getTitle(),
+        opt.getDesc(),
+        opt.getUnit(),
+    };
 }
 
 std::optional<SaneOptionsWrapper::GenericOptionData<std::string>> SaneOptionsWrapper::getMode() {
@@ -105,13 +114,22 @@ std::optional<SaneOptionsWrapper::GenericOptionData<std::string>> SaneOptionsWra
 
     SaneOption &opt = (*allOptions)[modeIdx];
     if (opt.getConstraintType() == SANE_CONSTRAINT_STRING_LIST) {
-        return GenericOptionData<std::string>{get<std::string>(opt.getValue()),
-                                              get<std::vector<std::string>>(opt.getConstraint()),
-                                              opt.getTitle(),
-                                              opt.getDesc()};
+        return GenericOptionData<std::string>{
+            get<std::string>(opt.getValue()),
+            get<std::vector<std::string>>(opt.getConstraint()),
+            opt.getTitle(),
+            opt.getDesc(),
+            opt.getUnit(),
+        };
     }
 
-    return GenericOptionData<std::string>{get<std::string>(opt.getValue()), {}, opt.getTitle(), opt.getDesc()};
+    return GenericOptionData<std::string>{
+        get<std::string>(opt.getValue()),
+        {},
+        opt.getTitle(),
+        opt.getDesc(),
+        opt.getUnit(),
+    };
 }
 
 std::optional<SaneOptionsWrapper::GenericOptionData<double>> SaneOptionsWrapper::getResolution() {
@@ -129,16 +147,17 @@ std::optional<SaneOptionsWrapper::GenericOptionData<double>> SaneOptionsWrapper:
                 get<std::vector<double>>(opt.getConstraint()),
                 opt.getTitle(),
                 opt.getDesc(),
+                opt.getUnit(),
             };
         }
         std::vector<int>    tmp = get<std::vector<int>>(opt.getConstraint());
         std::vector<double> res;
 
         std::transform(tmp.begin(), tmp.end(), std::back_inserter(res), [](int i) { return (double)i; });
-        return GenericOptionData<double>{value, res, opt.getTitle(), opt.getDesc()};
+        return GenericOptionData<double>{value, res, opt.getTitle(), opt.getDesc(), opt.getUnit()};
     }
 
-    return GenericOptionData<double>{value, {}, opt.getTitle(), opt.getDesc()};
+    return GenericOptionData<double>{value, {}, opt.getTitle(), opt.getDesc(), opt.getUnit()};
 }
 
 bool SaneOptionsWrapper::setSource(std::string source) {
@@ -172,7 +191,7 @@ bool SaneOptionsWrapper::setResolution(double resolution) {
         throw std::runtime_error("Unable to set resolution (option does not exist)");
     }
 
-    SaneOption &opt = (*allOptions)[resolutionIdx];
+    SaneOption         &opt = (*allOptions)[resolutionIdx];
     SaneOption::value_t val;
     if (opt.getType() == SANE_TYPE_INT) {
         val = (int)resolution;
