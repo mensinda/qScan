@@ -20,9 +20,14 @@ class ImageViewer : public QWidget {
     explicit ImageViewer(QWidget *_parent = nullptr);
     virtual ~ImageViewer();
 
+    void updateImage(QImage &_img);
+
   public slots:
     void selectionChanged(QRect _selectionRect);
+    void updateSelection(QRect _newSelection);
 
+  signals:
+    void selectionUpdated(QRect _rect);
 };
 
-}
+} // namespace qscan::gui

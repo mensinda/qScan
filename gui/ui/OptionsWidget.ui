@@ -139,19 +139,19 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="3" column="2">
-        <widget class="QDoubleSpinBox" name="bottomRight"/>
+        <widget class="QDoubleSpinBox" name="bottomRightY"/>
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="sal2">
          <property name="text">
-          <string>Top Right:</string>
+          <string>Top Left Y:</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="sal3">
          <property name="text">
-          <string>Bottom Left:</string>
+          <string>Bottom Right X:</string>
          </property>
         </widget>
        </item>
@@ -184,7 +184,7 @@
        <item row="3" column="1">
         <widget class="QLabel" name="sal4">
          <property name="text">
-          <string>Bottom Right:</string>
+          <string>Bottom Right Y:</string>
          </property>
         </widget>
        </item>
@@ -202,18 +202,18 @@
         </spacer>
        </item>
        <item row="2" column="2">
-        <widget class="QDoubleSpinBox" name="bottomLeft"/>
+        <widget class="QDoubleSpinBox" name="bottomRightX"/>
        </item>
        <item row="0" column="2">
-        <widget class="QDoubleSpinBox" name="topLeft"/>
+        <widget class="QDoubleSpinBox" name="topLeftX"/>
        </item>
        <item row="1" column="2">
-        <widget class="QDoubleSpinBox" name="topRight"/>
+        <widget class="QDoubleSpinBox" name="topLeftY"/>
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="sal1">
          <property name="text">
-          <string>Top Left:</string>
+          <string>Top Left X:</string>
          </property>
         </widget>
        </item>
@@ -514,7 +514,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>topLeft</sender>
+   <sender>topLeftX</sender>
    <signal>valueChanged(double)</signal>
    <receiver>OptionsWidget</receiver>
    <slot>scanAreaUpdated()</slot>
@@ -530,7 +530,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>topRight</sender>
+   <sender>topLeftY</sender>
    <signal>valueChanged(double)</signal>
    <receiver>OptionsWidget</receiver>
    <slot>scanAreaUpdated()</slot>
@@ -546,7 +546,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>bottomLeft</sender>
+   <sender>bottomRightX</sender>
    <signal>valueChanged(double)</signal>
    <receiver>OptionsWidget</receiver>
    <slot>scanAreaUpdated()</slot>
@@ -562,7 +562,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>bottomRight</sender>
+   <sender>bottomRightY</sender>
    <signal>valueChanged(double)</signal>
    <receiver>OptionsWidget</receiver>
    <slot>scanAreaUpdated()</slot>
@@ -579,6 +579,8 @@
   </connection>
  </connections>
  <slots>
+  <signal>scanAreaHasUpdated(QRect)</signal>
+  <signal>optionsReloaded()</signal>
   <slot>sourceUpdated()</slot>
   <slot>modeUpdated()</slot>
   <slot>resolutionUpdated()</slot>

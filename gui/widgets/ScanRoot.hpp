@@ -26,6 +26,8 @@ class ScanRoot : public QWidget {
     std::future<void>  connectFuture;
     lib::SaneException lastException{SANE_STATUS_GOOD, ""};
 
+    QRect previewSize{};
+
   public:
     explicit ScanRoot(QWidget *parent);
     virtual ~ScanRoot();
@@ -47,6 +49,7 @@ class ScanRoot : public QWidget {
     void connectionFailed();
 
     void newTab();
+    void deviceOptionsReloaded();
 
   signals:
     void signalConnected();

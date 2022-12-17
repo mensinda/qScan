@@ -284,6 +284,8 @@
   </connection>
  </connections>
  <slots>
+  <signal>selectionUpdated(QRect)</signal>
   <slot>selectionChanged(QRect)</slot>
+  <slot>updateSelection(QRect)</slot>
  </slots>
 </ui>

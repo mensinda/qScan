@@ -22,6 +22,7 @@ class ScanImageView : public QGraphicsView {
     [[nodiscard]] double getScale() const;
 
     void updateImage(const QImage &_img);
+    void updateSelection(QRect _newSelection);
 
   public slots:
     void zoomIn();

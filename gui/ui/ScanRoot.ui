@@ -99,10 +99,15 @@
       <property name="tabsClosable">
        <bool>true</bool>
       </property>
-      <widget class="qscan::gui::ImageViewer" name="preview">
+      <widget class="QWidget" name="previewContainer">
        <attribute name="title">
         <string>Preview</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="qscan::gui::ImageViewer" name="preview" native="true"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </widget>
@@ -174,12 +179,21 @@
    <extends>QWidget</extends>
    <header>OptionsWidget.hpp</header>
    <container>1</container>
+   <slots>
+    <signal>scanAreaHasUpdated(QRect)</signal>
+    <signal>optionsReloaded()</signal>
+    <slot>updateScanArea(QRect)</slot>
+   </slots>
   </customwidget>
   <customwidget>
    <class>qscan::gui::ImageViewer</class>
    <extends>QWidget</extends>
    <header>ImageViewer.hpp</header>
    <container>1</container>
+   <slots>
+    <signal>selectionUpdated(QRect)</signal>
+    <slot>updateSelection(QRect)</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -264,6 +278,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>preview</sender>
+   <signal>selectionUpdated(QRect)</signal>
+   <receiver>settings</receiver>
+   <slot>updateScanArea(QRect)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>440</x>
+     <y>228</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>80</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>settings</sender>
+   <signal>scanAreaHasUpdated(QRect)</signal>
+   <receiver>preview</receiver>
+   <slot>updateSelection(QRect)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>440</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>settings</sender>
+   <signal>optionsReloaded()</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>deviceOptionsReloaded()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>80</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>scanOne()</slot>
@@ -271,5 +333,7 @@
   <slot>scanAbort()</slot>
   <slot>switchDevice()</slot>
   <slot>newTab()</slot>
+  <slot>previewSelectionUpdated(QRect)</slot>
+  <slot>deviceOptionsReloaded()</slot>
  </slots>
 </ui>

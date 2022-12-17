@@ -29,6 +29,9 @@ class OptionsWidget : public QWidget {
     [[nodiscard]] ScanRoot   *getScanRoot() const { return scanRoot; }
     [[nodiscard]] MainWindow *getMainWindow() const;
 
+    QRect maxScanArea();
+    double getDpmm();
+
   public slots:
     void sourceUpdated();
     void modeUpdated();
@@ -37,6 +40,12 @@ class OptionsWidget : public QWidget {
     void scanAreaUpdated();
 
     void reloadOptions();
+
+    void updateScanArea(QRect _rect);
+
+  signals:
+    void scanAreaHasUpdated(QRect _newArea);
+    void optionsReloaded();
 };
 
 } // namespace qscan::gui

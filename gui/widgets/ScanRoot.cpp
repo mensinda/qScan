@@ -23,7 +23,9 @@ ScanRoot::ScanRoot(QWidget *parent) : QWidget(parent), ui(new Ui::ScanRoot) {
 }
 
 ScanRoot::~ScanRoot() {
-    if (connectFuture.valid()) { connectFuture.get(); }
+    if (connectFuture.valid()) {
+        connectFuture.get();
+    }
 }
 
 void ScanRoot::scanOne() {}
@@ -103,6 +105,19 @@ void ScanRoot::connectionFailed() {
 void ScanRoot::newTab() {
     // TODO
     logger()->info("New tab!");
+}
+
+void ScanRoot::deviceOptionsReloaded() {
+    QRect newPreviewRect = ui->settings->maxScanArea();
+    if (newPreviewRect.isNull() || newPreviewRect == previewSize) {
+        return;
+    }
+
+    QImage whitePreviewImg{newPreviewRect.width(), newPreviewRect.height(), QImage::Format_RGB32};
+    whitePreviewImg.fill(Qt::white);
+    ui->preview->updateImage(whitePreviewImg);
+
+    previewSize = newPreviewRect;
 }
 
 } // namespace qscan::gui

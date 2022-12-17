@@ -20,6 +20,16 @@ void ImageViewer::selectionChanged(QRect _selectionRect) {
                     _selectionRect.y(),
                     _selectionRect.width(),
                     _selectionRect.height());
+    emit selectionUpdated(_selectionRect);
+}
+
+void ImageViewer::updateSelection(QRect _newSelection) {
+    logger()->warn("UPDATE TO: {}x{} {}x{}", _newSelection.x(), _newSelection.y(), _newSelection.width(), _newSelection.height());
+    ui->viewer->updateSelection(_newSelection);
+}
+
+void ImageViewer::updateImage(QImage &_img) {
+    ui->viewer->updateImage(_img);
 }
 
 } // namespace qscan::gui

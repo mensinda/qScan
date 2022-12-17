@@ -106,4 +106,8 @@ void ScanImageView::mouseReleaseEvent(QMouseEvent *event) {
     QGraphicsView::mouseReleaseEvent(event);
 }
 
+void ScanImageView::updateSelection(QRect _newSelection) {
+    overlay->updateSelection(_newSelection);
+}
+
 } // namespace qscan::gui
