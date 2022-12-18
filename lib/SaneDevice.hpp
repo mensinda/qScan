@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SaneImage.hpp"
 #include "SaneOption.hpp"
 #include "SaneOptionsWrapper.hpp"
 #include <sane/sane.h>
@@ -22,6 +23,9 @@ class SaneDevice {
 
     SaneOptionsWrapper options;
 
+    size_t expectedBytes = 0;
+    size_t readBytes = 0;
+
   public:
 
     explicit SaneDevice(const SANE_Device *device);
@@ -37,6 +41,8 @@ class SaneDevice {
     [[nodiscard]] SaneOptionsWrapper &getOptions() { return options; }
     [[nodiscard]] SANE_Handle         getHandle() { return handle; }
 
+    [[nodiscard]] SaneImage scan();
+    [[nodiscard]] double scanProgress();
 
     // No copy or move
 

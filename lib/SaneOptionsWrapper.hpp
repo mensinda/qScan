@@ -38,6 +38,7 @@ class SaneOptionsWrapper {
     int sourceIdx       = -1;
     int modeIdx         = -1;
     int resolutionIdx   = -1;
+    int previewIdx      = -1;
     int bottomRightXIdx = -1;
     int bottomRightYIdx = -1;
     int topLeftXIdx     = -1;
@@ -51,11 +52,13 @@ class SaneOptionsWrapper {
     std::optional<GenericOptionData<std::string>> getMode();
     std::optional<GenericOptionData<double>>      getResolution();
     std::optional<ScanAreaData>                   getScanArea();
+    std::optional<bool>                           getPreview();
 
     bool setSource(std::string source);
     bool setMode(std::string mode);
     bool setResolution(double resolution);
     bool setScanArea(ScanArea area);
+    bool setPreview(bool preview);
 
     void refreshFilter();
 

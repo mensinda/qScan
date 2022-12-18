@@ -23,6 +23,7 @@ void SaneOptionsWrapper::refreshFilter() {
             case "mode"_h: modeIdx = opt.getType() == SANE_TYPE_STRING ? (int)i : -1; break;
             case "source"_h: sourceIdx = opt.getType() == SANE_TYPE_STRING ? (int)i : -1; break;
             case "resolution"_h: resolutionIdx = isNumeric(opt) ? (int)i : -1; break;
+            case "preview"_h: previewIdx = opt.getType() == SANE_TYPE_BOOL ? (int)i : -1; break;
         }
     }
 }
@@ -160,6 +161,15 @@ std::optional<SaneOptionsWrapper::GenericOptionData<double>> SaneOptionsWrapper:
     return GenericOptionData<double>{value, {}, opt.getTitle(), opt.getDesc(), opt.getUnit()};
 }
 
+std::optional<bool> SaneOptionsWrapper::getPreview() {
+    if (previewIdx < 0) {
+        return {};
+    }
+
+    const SaneOption &opt = (*allOptions)[previewIdx];
+    return get<bool>(opt.getValue());
+}
+
 bool SaneOptionsWrapper::setSource(std::string source) {
     if (sourceIdx < 0) {
         throw std::runtime_error("Unable to set source (option does not exist)");
@@ -222,6 +232,20 @@ bool SaneOptionsWrapper::setScanArea(SaneOptionsWrapper::ScanArea area) {
     }
 
     return refresh;
+}
+
+bool SaneOptionsWrapper::setPreview(bool preview) {
+    if (previewIdx < 0) {
+        throw std::runtime_error("Unable to set preview (option does not exist)");
+    }
+
+    SaneOption &opt = (*allOptions)[previewIdx];
+    if (opt.setValue(preview)) {
+        refreshFilter();
+        return true;
+    }
+
+    return false;
 }
 
 } // namespace qscan::lib

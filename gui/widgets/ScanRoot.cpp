@@ -12,12 +12,16 @@ using namespace qscan::lib;
 
 namespace qscan::gui {
 
-ScanRoot::ScanRoot(QWidget *parent) : QWidget(parent), ui(new Ui::ScanRoot) {
+ScanRoot::ScanRoot(QWidget *parent) : QWidget(parent), ui(new Ui::ScanRoot), progressTimer(parent) {
     ui->setupUi(this);
 
     ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
     ui->settings->setScanRoot(this);
 
+    progressTimer.setInterval(250);
+
+    QObject::connect(&progressTimer, SIGNAL(timeout()), this, SLOT(updateProgressBar()));
+    QObject::connect(this, SIGNAL(scanHasFinished()), this, SLOT(scanDone()));
     QObject::connect(this, SIGNAL(signalConnected()), this, SLOT(deviceConnected()));
     QObject::connect(this, SIGNAL(signalConnectionFailed()), this, SLOT(connectionFailed()));
 }
@@ -26,6 +30,56 @@ ScanRoot::~ScanRoot() {
     if (connectFuture.valid()) {
         connectFuture.get();
     }
+    if (scanFuture.valid()) {
+        (void)scanFuture.get();
+    }
+}
+
+ScanRoot::QImageContainer ScanRoot::doScan() {
+    SaneImage img = saneDevice->scan();
+    auto      raw = img.asRGB8();
+
+    // Fixup for Qt QImage::Format_RGB888 does not seem to work
+    std::vector<uint32_t> rawBytes(raw.size());
+    for (size_t i = 0; i < raw.size(); ++i) {
+        rawBytes[i] = qRgb(raw[i].r, raw[i].g, raw[i].b);
+    }
+
+    QImage qtImage{
+        const_cast<const uchar *>(reinterpret_cast<uchar *>(rawBytes.data())),
+        (int)img.width(),
+        (int)(rawBytes.size() / img.width()),
+        QImage::Format_ARGB32,
+    };
+
+    emit scanHasFinished();
+    return {std::move(rawBytes), std::move(qtImage)};
+}
+
+void ScanRoot::scanDone() {
+    auto [_, qtImage] = scanFuture.get();
+    ui->preview->updateImage(qtImage);
+
+    progressTimer.stop();
+
+    ui->scanProgress->setEnabled(false);
+    ui->scanProgress->setValue(0);
+    ui->cfgRootWidget->setEnabled(true);
+    ui->btnPreview->setEnabled(true);
+    ui->btnScanOne->setEnabled(true);
+    ui->btnScanBatch->setEnabled(true);
+    ui->btnStop->setEnabled(false);
+}
+
+void ScanRoot::scanPreview() {
+    saneDevice->getOptions().setPreview(false);
+    progressTimer.start();
+    ui->cfgRootWidget->setEnabled(false);
+    ui->btnPreview->setEnabled(false);
+    ui->btnScanOne->setEnabled(false);
+    ui->btnScanBatch->setEnabled(false);
+    ui->btnStop->setEnabled(true);
+    scanFuture = std::async(std::launch::async, &ScanRoot::doScan, this);
 }
 
 void ScanRoot::scanOne() {}
@@ -119,5 +173,19 @@ void ScanRoot::deviceOptionsReloaded() {
 
     previewSize = newPreviewRect;
 }
+
+void ScanRoot::updateProgressBar() {
+    ui->scanProgress->setEnabled(true);
+    double progress = saneDevice->scanProgress();
+    if (progress <= 0.001) {
+        ui->scanProgress->setMinimum(0);
+        ui->scanProgress->setMaximum(0);
+        return;
+    }
+    ui->scanProgress->setMinimum(0);
+    ui->scanProgress->setMaximum(1000);
+    ui->scanProgress->setValue((int)(progress * 1000.0));
+}
+
 
 } // namespace qscan::gui

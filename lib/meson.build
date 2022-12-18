@@ -3,6 +3,7 @@ qscan_lib_src = files([
     'SaneBackend.cpp',
     'SaneDevice.cpp',
     'SaneException.cpp',
+    'SaneImage.cpp',
     'SaneOption.cpp',
     'SaneOptionsWrapper.cpp',
 ])

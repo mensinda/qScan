@@ -115,9 +115,28 @@
    <item>
     <layout class="QHBoxLayout" name="conrolLayout">
      <item>
+      <widget class="QPushButton" name="btnPreview">
+       <property name="text">
+        <string>Preview</string>
+       </property>
+       <property name="icon">
+        <iconset theme="document-print-preview"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="btnScanOne">
        <property name="toolTip">
         <string>Scan a signle image</string>
+       </property>
+       <property name="text">
+        <string>Scan</string>
        </property>
        <property name="icon">
         <iconset theme="media-playback-start"/>
@@ -125,7 +144,7 @@
        <property name="iconSize">
         <size>
          <width>32</width>
-         <height>34</height>
+         <height>32</height>
         </size>
        </property>
       </widget>
@@ -134,6 +153,9 @@
       <widget class="QPushButton" name="btnScanBatch">
        <property name="toolTip">
         <string>Scan multiple images</string>
+       </property>
+       <property name="text">
+        <string>Batch scan</string>
        </property>
        <property name="icon">
         <iconset theme="media-playlist-repeat"/>
@@ -157,6 +179,9 @@
       <widget class="QPushButton" name="btnStop">
        <property name="toolTip">
         <string>Stop the current scan process</string>
+       </property>
+       <property name="text">
+        <string>Stop</string>
        </property>
        <property name="icon">
         <iconset theme="process-stop"/>
@@ -326,6 +351,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btnPreview</sender>
+   <signal>clicked()</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>scanPreview()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>64</x>
+     <y>454</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>scanOne()</slot>
@@ -335,5 +376,6 @@
   <slot>newTab()</slot>
   <slot>previewSelectionUpdated(QRect)</slot>
   <slot>deviceOptionsReloaded()</slot>
+  <slot>scanPreview()</slot>
  </slots>
 </ui>
