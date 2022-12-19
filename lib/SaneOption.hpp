@@ -58,9 +58,10 @@ class SaneOption {
     void exceptional_control_option(SANE_Action action, void *value, SANE_Int *info);
 
   public:
-    explicit SaneOption(SaneDevice *_device, SANE_Int _index, const SANE_Option_Descriptor *optionDescriptor);
+    explicit SaneOption(SaneDevice *_device, SANE_Int _index);
     virtual ~SaneOption() = default;
 
+    void reload();
     void reloadValue();
 
     [[nodiscard]] const std::string   &getName() const { return name; }

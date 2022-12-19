@@ -1,4 +1,5 @@
 #include "SaneDevice.hpp"
+#include "util/ValueResetter.hpp"
 #include "SaneException.hpp"
 #include "SaneImage.hpp"
 #include "enum2str.hpp"
@@ -40,10 +41,24 @@ void SaneDevice::connect() {
 }
 
 void SaneDevice::reload_options() {
+    if (disableOptionReload) {
+        return;
+    }
+
     logger_t log = logger();
 
-    rawOptions.clear();
+    // Reload options on subsequent runs
+    if (!rawOptions.empty()) {
+        log->info("[Sane] Reloading {} options:", rawOptions.size());
+        for (SaneOption &opt : rawOptions) {
+            opt.reload();
+        }
 
+        options.refreshFilter();
+        return;
+    }
+
+    // Construct the options the first time
     SANE_Int    nopts  = 0;
     SANE_Status status = sane_control_option(handle, 0, SANE_ACTION_GET_VALUE, &nopts, nullptr);
 
@@ -59,15 +74,8 @@ void SaneDevice::reload_options() {
             continue;
         }
 
-        log->info("[Sane]  -- {:<16}: {:<16} | {:<16} | {:<24} -- {}",
-                  opt_desc->name ?: "",
-                  enum2str::toStr(opt_desc->type),
-                  enum2str::toStr(opt_desc->unit),
-                  enum2str::toStr(opt_desc->constraint_type),
-                  enum2str::SaneOption_OptionCap_toStr(opt_desc->cap));
-        rawOptions.emplace_back(this, i, opt_desc);
+        rawOptions.emplace_back(this, i);
     }
-
     options.refreshFilter();
 }
 
@@ -153,11 +161,34 @@ SaneImage SaneDevice::scan() {
     return image;
 }
 
-double SaneDevice::scanProgress() {
+double SaneDevice::scanProgress() const {
     if (expectedBytes == 0) {
         return 0.0;
     }
     return std::min(1.0, (double)readBytes / (double)expectedBytes);
+}
+
+std::unordered_map<std::string, SaneOption::value_t> SaneDevice::optionsSnapshot() const {
+    std::unordered_map<std::string, SaneOption::value_t> snapshot{};
+    snapshot.reserve(rawOptions.size());
+    for (const auto &opt : rawOptions) {
+        snapshot[opt.getName()] = opt.getValue();
+    }
+    return snapshot;
+}
+
+void SaneDevice::applyOptionSnapshot(const std::unordered_map<std::string, SaneOption::value_t> &_snapshot) {
+    ValueResetter resetter{&disableOptionReload, true};
+    for (auto &opt : rawOptions) {
+        auto iter = _snapshot.find(opt.getName());
+        if (iter == _snapshot.end()) {
+            continue;
+        }
+        // We will reload at the end anyway
+        (void)opt.setValue(iter->second);
+    }
+    resetter.resetNow();
+    reload_options();
 }
 
 } // namespace qscan::lib

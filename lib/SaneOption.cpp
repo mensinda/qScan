@@ -8,8 +8,20 @@
 
 namespace qscan::lib {
 
-SaneOption::SaneOption(SaneDevice *_device, SANE_Int _index, const SANE_Option_Descriptor *optionDescriptor)
-    : device(_device), index(_index) {
+SaneOption::SaneOption(SaneDevice *_device, SANE_Int _index) : device(_device), index(_index) { reload(); }
+
+void SaneOption::exceptional_control_option(SANE_Action action, void *value_raw, SANE_Int *info) {
+    SANE_Status status = sane_control_option(device->getHandle(), index, action, value_raw, info);
+    if (status != SANE_STATUS_GOOD) {
+        switch (action) {
+            case SANE_ACTION_GET_VALUE: throw SaneException(status, "Getting option " + name + " failed");
+            default: throw SaneException(status, "Setting option " + name + " failed");
+        }
+    }
+}
+
+void SaneOption::reload() {
+    const SANE_Option_Descriptor *optionDescriptor = sane_get_option_descriptor(device->getHandle(), index);
 
     name  = optionDescriptor->name ?: "";
     title = optionDescriptor->title ?: "";
@@ -79,14 +91,11 @@ SaneOption::SaneOption(SaneDevice *_device, SANE_Int _index, const SANE_Option_D
     reloadValue();
 }
 
-void SaneOption::exceptional_control_option(SANE_Action action, void *value_raw, SANE_Int *info) {
-    SANE_Status status = sane_control_option(device->getHandle(), index, action, value_raw, info);
-    if (status != SANE_STATUS_GOOD) {
-        switch (action) {
-            case SANE_ACTION_GET_VALUE: throw SaneException(status, "Getting option " + name + " failed");
-            default: throw SaneException(status, "Setting option " + name + " failed");
-        }
-    }
+consteval size_t constStrlen(const char *str) {
+    const char *end;
+    for (end = str; *end != 0; ++end)
+        ;
+    return end - str;
 }
 
 void SaneOption::reloadValue() {
@@ -102,6 +111,16 @@ void SaneOption::reloadValue() {
         case SANE_TYPE_STRING: value = std::string{(SANE_String)raw}; break;
         default: throw std::runtime_error("Unsupported option type " + enum2str::toStr(type));
     }
+
+    std::string valueStr = std::visit([](auto &&v) -> std::string { return fmt::format("{}", v); }, value);
+
+    logger()->debug("[Sane]  -- {:<16}: {:<8} | {:<8} | {:<16} = {:<32} -- ({})",
+                    name,
+                    std::string_view{enum2str::toStr(type)}.substr(constStrlen("SANE_TYPE_")),
+                    std::string_view{enum2str::toStr(unit)}.substr(constStrlen("SANE_UNIT_")),
+                    std::string_view{enum2str::toStr(constraintType)}.substr(constStrlen("SANE_CONSTRAINT_")),
+                    valueStr,
+                    enum2str::SaneOption_OptionCap_toStr(caps));
 }
 
 bool SaneOption::setValue(value_t newValue) {

@@ -5,6 +5,7 @@
 #include "SaneOptionsWrapper.hpp"
 #include <sane/sane.h>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace qscan::lib {
@@ -24,7 +25,9 @@ class SaneDevice {
     SaneOptionsWrapper options;
 
     size_t expectedBytes = 0;
-    size_t readBytes = 0;
+    size_t readBytes     = 0;
+
+    bool disableOptionReload = false;
 
   public:
 
@@ -42,7 +45,11 @@ class SaneDevice {
     [[nodiscard]] SANE_Handle         getHandle() { return handle; }
 
     [[nodiscard]] SaneImage scan();
-    [[nodiscard]] double scanProgress();
+    [[nodiscard]] double    scanProgress() const;
+
+    [[nodiscard]] std::unordered_map<std::string, SaneOption::value_t> optionsSnapshot() const;
+
+    void applyOptionSnapshot(const std::unordered_map<std::string, SaneOption::value_t> &_snapshot);
 
     // No copy or move
 

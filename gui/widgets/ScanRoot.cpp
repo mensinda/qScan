@@ -33,6 +33,9 @@ ScanRoot::~ScanRoot() {
     if (scanFuture.valid()) {
         (void)scanFuture.get();
     }
+    if (mainWindow->config().lastDevice) {
+        mainWindow->config().lastDevice->options = saneDevice->optionsSnapshot();
+    }
 }
 
 ScanRoot::QImageContainer ScanRoot::doScan() {
@@ -111,6 +114,9 @@ void ScanRoot::updateSaneDevice(std::unique_ptr<lib::SaneDevice> device) {
 void ScanRoot::doConnect() {
     try {
         saneDevice->connect();
+        if (mainWindow->config().lastDevice) {
+            saneDevice->applyOptionSnapshot(mainWindow->config().lastDevice->options);
+        }
     } catch (SaneException &ex) {
         lastException = ex;
         emit signalConnectionFailed();
@@ -119,12 +125,14 @@ void ScanRoot::doConnect() {
 
     emit signalConnected();
 }
+
 void ScanRoot::deviceConnected() {
     mainWindow->config().lastDevice = QScanConfig::LastDevice{
         saneDevice->getName(),
         saneDevice->getVendor(),
         saneDevice->getModel(),
         saneDevice->getType(),
+        saneDevice->optionsSnapshot(),
     };
 
     ui->scanProgress->setEnabled(false);

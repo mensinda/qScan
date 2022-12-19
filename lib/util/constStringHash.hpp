@@ -18,7 +18,7 @@ inline size_t fnv1aHash(const char *data) {
     return hash;
 }
 
-constexpr size_t fnv1aHash(const char *data, size_t n) {
+constexpr inline size_t fnv1aHash(const char *data, size_t n) {
     size_t hash = FNV1A_BASE;
     for (size_t i = 0; i < n; ++i) {
         hash ^= static_cast<size_t>(data[i]);
@@ -27,8 +27,8 @@ constexpr size_t fnv1aHash(const char *data, size_t n) {
     return hash;
 }
 
-size_t fnv1aHash(std::string_view _str) { return fnv1aHash(_str.data(), _str.size()); }
+inline size_t fnv1aHash(std::string_view _str) { return fnv1aHash(_str.data(), _str.size()); }
 
-constexpr size_t operator"" _h(const char *data, size_t n) { return fnv1aHash(data, n); }
+constexpr inline size_t operator"" _h(const char *data, size_t n) { return fnv1aHash(data, n); }
 
 } // namespace qscan::lib

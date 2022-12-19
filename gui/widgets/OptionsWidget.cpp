@@ -60,11 +60,13 @@ void OptionsWidget::reloadOptions() {
     ui->coResolution->clear();
     ui->coResolution->setEnabled((bool)modeOpt);
     if (modeOpt) {
+        const std::string unitStr = SaneBackend::saneUnitToDisplayString(resolutionOpt->unit);
         for (const double i : resolutionOpt->values) {
-            auto displayStr = fmt::format("{} {}", (int)i, SaneBackend::saneUnitToDisplayString(resolutionOpt->unit));
+            auto displayStr = fmt::format("{} {}", (int)i, unitStr);
             ui->coResolution->addItem(QString::fromStdString(displayStr), QVariant(i));
         }
-        ui->coResolution->setCurrentText(QString::number((int)resolutionOpt->current));
+        auto displayStr = fmt::format("{} {}", (int)resolutionOpt->current, unitStr);
+        ui->coResolution->setCurrentText(QString::fromStdString(displayStr));
         ui->coResolution->setToolTip(QString::fromStdString(resolutionOpt->description));
         ui->lResolution->setToolTip(QString::fromStdString(resolutionOpt->description));
     }

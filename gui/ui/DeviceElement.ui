@@ -113,8 +113,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="media-playback-start">
-          <normaloff>.</normaloff>.</iconset>
+         <iconset theme="media-playback-start"/>
         </property>
         <property name="iconSize">
          <size>

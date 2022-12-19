@@ -36,8 +36,7 @@
         <string>Zoom in</string>
        </property>
        <property name="icon">
-        <iconset theme="zoom-in">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="zoom-in"/>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -66,8 +65,7 @@
         <string>Zoom out</string>
        </property>
        <property name="icon">
-        <iconset theme="zoom-out">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="zoom-out"/>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -90,8 +88,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset theme="zoom-fit-best">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="zoom-fit-best"/>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -104,8 +101,7 @@
         <string>Zoom to original size</string>
        </property>
        <property name="icon">
-        <iconset theme="zoom-original">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="zoom-original"/>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -131,8 +127,7 @@
         <string>Clear Selection</string>
        </property>
        <property name="icon">
-        <iconset theme="edit-clear">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="edit-clear"/>
        </property>
       </widget>
      </item>
