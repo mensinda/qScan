@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config/QScanConfig.hpp"
 #include <QWidget>
 #include <memory>
 
@@ -24,7 +25,7 @@ class OptionsWidget : public QWidget {
     explicit OptionsWidget(QWidget *_parent);
     virtual ~OptionsWidget();
 
-    void setScanRoot(ScanRoot *_scanRoot) { scanRoot = _scanRoot; }
+    void setScanRoot(ScanRoot *_scanRoot);
 
     [[nodiscard]] ScanRoot   *getScanRoot() const { return scanRoot; }
     [[nodiscard]] MainWindow *getMainWindow() const;
@@ -32,6 +33,8 @@ class OptionsWidget : public QWidget {
     [[nodiscard]] QRect maxScanArea();
     [[nodiscard]] QRect currentScanArea();
     [[nodiscard]] double getDpmm();
+
+    [[nodiscard]] QScanConfig::BatchScanning batch();
 
   public slots:
     void sourceUpdated();

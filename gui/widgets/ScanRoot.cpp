@@ -18,7 +18,6 @@ ScanRoot::ScanRoot(QWidget *parent) : QWidget(parent), ui(new Ui::ScanRoot), pro
     ui->setupUi(this);
 
     ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
-    ui->settings->setScanRoot(this);
 
     progressTimer.setInterval(250);
 
@@ -60,7 +59,7 @@ QImageContainer ScanRoot::doScan() {
         };
 
         emit scanHasFinished();
-        return {std::move(rawBytes), std::move(qtImage)};
+        return {std::move(rawBytes), {}, std::move(qtImage)};
     } catch (const SaneException &e) {
         lastException = e;
         emit scanFailed();
@@ -101,10 +100,11 @@ void ScanRoot::guiStateReady() {
 void ScanRoot::scanDone() {
     auto *tab = currentTab();
     if (tab == nullptr) {
-        auto [_, qtImage] = scanFuture.get();
+        auto [_a, _b, qtImage] = scanFuture.get();
         ui->preview->updateImage(qtImage);
     } else {
         tab->addImage(scanFuture.get());
+        mainWindow->setCanSave(true);
     }
 
     if (!optionsSnapshot.empty()) {
@@ -282,7 +282,7 @@ void ScanRoot::deviceOptionsReloaded() {
     }
 
     QRect selection = ui->settings->currentScanArea();
-    QRect max = ui->settings->maxScanArea();
+    QRect max       = ui->settings->maxScanArea();
     if (selection == max) {
         selection = QRect();
     }
@@ -308,6 +308,63 @@ ImagesTab *ScanRoot::currentTab() {
 
     return dynamic_cast<ImagesTab *>(ui->mainTabs->currentWidget());
 }
+
+bool ScanRoot::hasUnsavedImages() {
+    for (int i = 1; i < ui->mainTabs->count(); ++i) {
+        auto *tab = dynamic_cast<ImagesTab *>(ui->mainTabs->widget(i));
+        if (!tab) {
+            continue;
+        }
+        if (tab->areAnyImagesModified()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void ScanRoot::selectTabWithUnsavedImages() {
+    for (int i = 1; i < ui->mainTabs->count(); ++i) {
+        auto *tab = dynamic_cast<ImagesTab *>(ui->mainTabs->widget(i));
+        if (!tab) {
+            continue;
+        }
+        if (tab->areAnyImagesModified()) {
+            ui->mainTabs->setCurrentIndex(i);
+            return;
+        }
+    }
+}
+
+void ScanRoot::handleTabChanged(int) {
+    ImagesTab *tab = currentTab();
+    if (!tab) {
+        mainWindow->setCanSave(false);
+        return;
+    }
+    mainWindow->setCanSave(tab->currentImage() != nullptr);
+}
+
+void ScanRoot::doSave() {
+    ImagesTab *tab = currentTab();
+    if (!tab) {
+        return;
+    }
+    tab->doSave();
+}
+
+void ScanRoot::doSaveAll() {
+    ImagesTab *tab = currentTab();
+    if (!tab) {
+        return;
+    }
+    tab->doSaveAll();
+}
+
+void ScanRoot::setMainWindow(MainWindow *_mainWindow) {
+    mainWindow = _mainWindow;
+    ui->settings->setScanRoot(this);
+}
+
 
 
 } // namespace qscan::gui

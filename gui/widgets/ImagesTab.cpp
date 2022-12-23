@@ -1,4 +1,5 @@
 #include "ImagesTab.hpp"
+#include "util/ImageEditor.hpp"
 #include "ScanImageView.hpp"
 #include "qscan_log.hpp"
 #include "ui_ImagesTab.h"
@@ -26,11 +27,54 @@ ImagesTab::~ImagesTab() {}
 void ImagesTab::skipUpdated(int _value) { ui->selectOffset->setMaximum(_value); }
 void ImagesTab::selectionHasUpdated(QRect _newSelection) { ui->btnCrop->setEnabled(!_newSelection.isNull()); }
 
-void ImagesTab::doSelectAll() {}
-void ImagesTab::doCrop() {}
-void ImagesTab::doRotateP90() {}
-void ImagesTab::doRotateM90() {}
-void ImagesTab::doRotate180() {}
+void ImagesTab::doSelectAll() {
+    doSelectNone();
+    for (int i = ui->selectOffset->value(); i < ui->listWidget->count(); i += ui->selectSkip->value() + 1) {
+        ui->listWidget->item(i)->setSelected(true);
+    }
+}
+
+void ImagesTab::doSelectNone() {
+    for (int i = 0; i < ui->listWidget->count(); ++i) {
+        ui->listWidget->item(i)->setSelected(false);
+    }
+}
+
+void ImagesTab::doCrop() {
+    QRect selection = ui->imageViewer->imageView()->getSelection();
+    if (selection.isNull()) {
+        return;
+    }
+    for (auto *img : currentlyActiveImages()) {
+        img->img.img  = crop(img->img.img, selection);
+        img->modified = true;
+    }
+    ui->imageViewer->updateImage(currentImage()->img.img);
+}
+
+void ImagesTab::doRotateP90() {
+    for (auto *img : currentlyActiveImages()) {
+        img->img.img  = rotate(img->img.img, 90.0);
+        img->modified = true;
+    }
+    ui->imageViewer->updateImage(currentImage()->img.img);
+}
+
+void ImagesTab::doRotateM90() {
+    for (auto *img : currentlyActiveImages()) {
+        img->img.img  = rotate(img->img.img, -90.0);
+        img->modified = true;
+    }
+    ui->imageViewer->updateImage(currentImage()->img.img);
+}
+
+void ImagesTab::doRotate180() {
+    for (auto *img : currentlyActiveImages()) {
+        img->img.img  = rotate(img->img.img, 180.0);
+        img->modified = true;
+    }
+    ui->imageViewer->updateImage(currentImage()->img.img);
+}
 
 void ImagesTab::doSave() {
     ImageData *image = currentImage();
@@ -38,22 +82,39 @@ void ImagesTab::doSave() {
         return;
     }
 
-    QString saveFileLocation =
-        QFileDialog::getSaveFileName(this,
-                                     tr("Save the currently displayed image in the image viewer"),
-                                     image->lastSaveLocation,
-                                     tr("Images (*.png *.jpg *.bmp)"));
+    QString saveFileLocation = QFileDialog::getSaveFileName(
+        this,
+        tr("Save the currently displayed image in the image viewer"),
+        image->lastSaveLocation,
+        tr("PNG(*.png);;JPEG(*.jpg);;GIF(*.gif);;BMP(*.bmp);;TIFF(*.tiff);;PSD(*.psd);;PPM(*.ppm);;PBM(*.pbm)"));
 
     if (saveFileLocation.isNull()) {
         return;
     }
 
     image->lastSaveLocation = saveFileLocation;
-    image->img.img.save(saveFileLocation);
+    saveImage(image->img.img, saveFileLocation.toStdString());
     image->modified = false;
 }
 
-void ImagesTab::doSaveAll() {}
+void ImagesTab::doSaveAll() {
+    std::vector<const QImage *> imgPtrs;
+    for (int i = 0; i < ui->listWidget->count(); ++i) {
+        QListWidgetItem *item = ui->listWidget->item(i);
+        int              idx  = item->data(Qt::UserRole).toInt();
+        imgPtrs.push_back(&images[idx].img.img);
+        images[idx].modified = false;
+    }
+
+    QString saveFileLocation =
+        QFileDialog::getSaveFileName(this, tr("Create a multi-image document from all images in the tab"));
+
+    if (saveFileLocation.isNull()) {
+        return;
+    }
+
+    saveMultiImage(imgPtrs, saveFileLocation.toStdString());
+}
 
 void ImagesTab::currentImageUpdated(QListWidgetItem *_cur, QListWidgetItem *_prev) {
     (void)_prev;

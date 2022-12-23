@@ -28,9 +28,12 @@ class MainWindow : public QMainWindow {
     void showDeviceSelection();
     void deviceSelected(std::unique_ptr<lib::SaneDevice> device);
 
+    void setCanSave(bool _canSave);
+
   public slots:
     void showAbout();
     void showAboutQt();
+    bool doClose();
 
   private:
     std::unique_ptr<Ui::MainWindow> ui;

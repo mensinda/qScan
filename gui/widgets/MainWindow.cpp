@@ -30,9 +30,15 @@ MainWindow::MainWindow(QWidget *parent, SaneBackend &_backend, QScanConfig &_cfg
     } else {
         showDeviceSelection();
     }
+
+    restoreGeometry(cfg.window.geometry);
+    restoreState(cfg.window.state);
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+    cfg.window.geometry = saveGeometry();
+    cfg.window.state    = saveState();
+}
 
 void MainWindow::showAbout() {
     QMessageBox::about(this, tr("About QScan"), tr("Version: %1").arg(QString::fromStdString(QSCAN_VERSION_STR)));
@@ -45,6 +51,7 @@ void MainWindow::showDeviceSelection() {
     ui->scanRoot->updateSaneDevice(nullptr);
     ui->deviceSelection->show();
     ui->deviceSelection->refreshDevices();
+    setCanSave(false);
 }
 
 void MainWindow::deviceSelected(std::unique_ptr<lib::SaneDevice> device) {
@@ -55,6 +62,29 @@ void MainWindow::deviceSelected(std::unique_ptr<lib::SaneDevice> device) {
     ui->deviceSelection->hide();
     ui->scanRoot->show();
     ui->scanRoot->updateSaneDevice(std::move(device));
+}
+
+bool MainWindow::doClose() {
+    // Check if closeable
+    if (ui->scanRoot->hasUnsavedImages()) {
+        ui->scanRoot->selectTabWithUnsavedImages();
+        QMessageBox::StandardButton btn =
+            QMessageBox::warning(this,
+                                 tr("Unsaved images"),
+                                 tr("Not all images have been saved. Do you still want to quit?"),
+                                 QMessageBox::Yes | QMessageBox::No,
+                                 QMessageBox::No);
+        if (btn == QMessageBox::No) {
+            return false;
+        }
+    }
+
+    return close();
+}
+
+void MainWindow::setCanSave(bool _canSave) {
+    ui->actionSave->setEnabled(_canSave);
+    ui->actionSave_all->setEnabled(_canSave);
 }
 
 } // namespace qscan::gui

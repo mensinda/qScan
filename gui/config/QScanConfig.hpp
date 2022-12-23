@@ -2,6 +2,7 @@
 
 #include "SaneDevice.hpp"
 #include "SaneOption.hpp"
+#include <QByteArray>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -19,7 +20,19 @@ struct QScanConfig {
         lib::SaneDevice::snapshot_t options;
     };
 
+    struct Window {
+        QByteArray state;
+        QByteArray geometry;
+    };
+
+    struct BatchScanning {
+        int max;
+        int delay;
+    };
+
     std::optional<LastDevice> lastDevice;
+    Window window;
+    BatchScanning batch;
 
     void save();
     void load();

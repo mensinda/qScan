@@ -20,6 +20,7 @@ class ScanImageView : public QGraphicsView {
     virtual ~ScanImageView();
 
     [[nodiscard]] double getScale() const;
+    [[nodiscard]] QRect getSelection() const;
 
     void updateImage(const QImage &_img);
     void updateSelection(QRect _newSelection);

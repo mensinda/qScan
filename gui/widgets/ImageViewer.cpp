@@ -9,7 +9,7 @@ namespace qscan::gui {
 ImageViewer::ImageViewer(QWidget *_parent) : QWidget(_parent), ui(new Ui::ImageViewer) {
     ui->setupUi(this);
 
-    // todo
+    updateSelection(QRect{});
 }
 
 ImageViewer::~ImageViewer() {}

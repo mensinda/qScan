@@ -49,6 +49,13 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="qscan::gui::OptionsWidget" name="settings" native="true"/>
           </item>
          </layout>
@@ -383,6 +390,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>mainTabs</sender>
+   <signal>currentChanged(int)</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>handleTabChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>440</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>scanOne()</slot>
@@ -394,5 +417,6 @@
   <slot>deviceOptionsReloaded()</slot>
   <slot>scanPreview()</slot>
   <slot>closeTab(int)</slot>
+  <slot>handleTabChanged(int)</slot>
  </slots>
 </ui>

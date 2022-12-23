@@ -6,6 +6,7 @@ gui_cpp_src = [
     'viewer/ScanImageView.cpp',
     'viewer/SelectionOverlay.cpp',
 
+    'util/ImageEditor.cpp',
     'util/QImageContainer.cpp',
 ]
 
@@ -36,6 +37,6 @@ gui_moc = qt.compile_moc(sources: [], headers: gui_hpp_src)
 
 gui_exe = executable(
     'qScan', [gui_cpp_src, gui_hpp_src, gui_ui, gui_moc],
-    dependencies: [qt_dep, qscan_lib_dep],
+    dependencies: [qt_dep, qscan_lib_dep, magick_dep],
     include_directories: ['widgets', 'viewer'],
 )

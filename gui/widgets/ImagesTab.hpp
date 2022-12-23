@@ -42,6 +42,7 @@ class ImagesTab : public QWidget {
 
   public slots:
     void doSelectAll();
+    void doSelectNone();
     void skipUpdated(int _value);
     void doUndo();
     void doRedo();

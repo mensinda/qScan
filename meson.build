@@ -14,6 +14,7 @@ add_global_arguments('-Wno-pedantic', language: 'cpp')
 
 sane_dep = dependency('sane-backends')
 json_dep = dependency('nlohmann_json')
+magick_dep = dependency('Magick++')
 
 cm = import('cmake')
 spdlog_opt = cm.subproject_options()

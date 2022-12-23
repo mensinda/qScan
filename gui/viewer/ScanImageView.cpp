@@ -110,4 +110,6 @@ void ScanImageView::updateSelection(QRect _newSelection) {
     overlay->updateSelection(_newSelection);
 }
 
+QRect ScanImageView::getSelection() const { return overlay->getSelection(); }
+
 } // namespace qscan::gui

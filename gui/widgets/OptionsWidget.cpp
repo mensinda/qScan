@@ -9,9 +9,11 @@ using namespace qscan::lib;
 
 namespace qscan::gui {
 
-OptionsWidget::OptionsWidget(QWidget *_parent) : QWidget(_parent), ui(new Ui::OptionsWidget) { ui->setupUi(this); }
+OptionsWidget::OptionsWidget(QWidget *_parent) : QWidget(_parent), ui(new Ui::OptionsWidget) {
+    ui->setupUi(this);
+}
 
-OptionsWidget::~OptionsWidget() {}
+OptionsWidget::~OptionsWidget() { scanRoot->getMainWindow()->config().batch = batch(); }
 
 void OptionsWidget::reloadOptions() {
     SaneOptionsWrapper &opts = scanRoot->getSaneDevice().getOptions();
@@ -281,6 +283,34 @@ double OptionsWidget::getDpmm() {
     }
 
     return resolutionOpt->current / 25.4;
+}
+
+QScanConfig::BatchScanning OptionsWidget::batch() {
+    int max   = ui->batchMax->value();
+    int delay = ui->batchDelay->value();
+    if (ui->batchMaxCB->checkState() == Qt::Unchecked) {
+        max = -max - 1;
+    }
+    if (ui->batchDelayCB->checkState() == Qt::Unchecked) {
+        delay = -delay - 1;
+    }
+    return {max, delay};
+}
+
+void OptionsWidget::setScanRoot(ScanRoot *_scanRoot) {
+    scanRoot = _scanRoot;
+
+    auto [max, delay] = scanRoot->getMainWindow()->config().batch;
+    ui->batchMaxCB->setCheckState(max < 0 ? Qt::Unchecked : Qt::Checked);
+    ui->batchDelayCB->setCheckState(delay < 0 ? Qt::Unchecked : Qt::Checked);
+    if (max < 0) {
+        max = -max - 1;
+    }
+    if (delay < 0) {
+        delay = -delay - 1;
+    }
+    ui->batchMax->setValue(max);
+    ui->batchDelay->setValue(delay);
 }
 
 

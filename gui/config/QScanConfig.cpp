@@ -94,8 +94,35 @@ void from_json(const json &j, QScanConfig::LastDevice &cfg) {
     }
 }
 
+void to_json(json &j, const QScanConfig::Window &window) {
+    j = {
+        {"state",    window.state.toBase64()   },
+        {"geometry", window.geometry.toBase64()},
+    };
+}
+
+void from_json(const json &j, QScanConfig::Window &cfg) {
+    cfg.state    = QByteArray::fromBase64(QByteArray::fromStdString(j.value("state", "")));
+    cfg.geometry = QByteArray::fromBase64(QByteArray::fromStdString(j.value("geometry", "")));
+}
+
+void to_json(json &j, const QScanConfig::BatchScanning &cfg) {
+    j = {
+        {"max",   cfg.max  },
+        {"delay", cfg.delay},
+    };
+}
+
+void from_json(const json &j, QScanConfig::BatchScanning &cfg) {
+    cfg.max   = j.value("max", -10);
+    cfg.delay = j.value("delay", -10);
+}
+
 void to_json(json &j, const QScanConfig &cfg) {
-    j = json{};
+    j = json{
+        {"window", cfg.window},
+        {"batch",  cfg.batch },
+    };
 
     if (cfg.lastDevice) {
         j["lastDevice"] = *cfg.lastDevice;
@@ -103,10 +130,17 @@ void to_json(json &j, const QScanConfig &cfg) {
 }
 
 void from_json(const json &j, QScanConfig &cfg) {
+    cfg.lastDevice = {};
+    cfg.window     = {};
+    cfg.batch      = {};
     if (j.contains("lastDevice")) {
         cfg.lastDevice = j["lastDevice"].get<QScanConfig::LastDevice>();
-    } else {
-        cfg.lastDevice = {};
+    }
+    if (j.contains("window")) {
+        cfg.window = j["window"].get<QScanConfig::Window>();
+    }
+    if (j.contains("batch")) {
+        cfg.batch = j["batch"].get<QScanConfig::BatchScanning>();
     }
 }
 

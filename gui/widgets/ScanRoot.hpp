@@ -39,12 +39,15 @@ class ScanRoot : public QWidget {
     explicit ScanRoot(QWidget *parent);
     virtual ~ScanRoot();
 
-    void setMainWindow(MainWindow *_mainWindow) { mainWindow = _mainWindow; }
+    void setMainWindow(MainWindow *_mainWindow);
 
     [[nodiscard]] MainWindow      *getMainWindow() const { return mainWindow; }
     [[nodiscard]] lib::SaneDevice &getSaneDevice() { return *saneDevice; }
 
     [[nodiscard]] ImagesTab *currentTab();
+    [[nodiscard]] bool hasUnsavedImages();
+
+    void selectTabWithUnsavedImages();
 
     void updateSaneDevice(std::unique_ptr<lib::SaneDevice> device);
 
@@ -62,8 +65,12 @@ class ScanRoot : public QWidget {
 
     void newTab();
     void closeTab(int _idx);
+    void handleTabChanged(int _idx);
     void deviceOptionsReloaded();
     void updateProgressBar();
+
+    void doSave();
+    void doSaveAll();
 
   signals:
     void signalConnected();
