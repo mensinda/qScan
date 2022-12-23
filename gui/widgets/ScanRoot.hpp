@@ -1,5 +1,7 @@
 #pragma once
 
+#include "util/QImageContainer.hpp"
+#include "ImagesTab.hpp"
 #include "SaneDevice.hpp"
 #include "SaneException.hpp"
 #include <QTimer>
@@ -18,12 +20,6 @@ class MainWindow;
 class ScanRoot : public QWidget {
     Q_OBJECT
 
-  public:
-    struct QImageContainer {
-        std::vector<uint32_t> raw;
-        QImage                img;
-    };
-
   private:
     std::unique_ptr<Ui::ScanRoot>    ui;
     std::unique_ptr<lib::SaneDevice> saneDevice;
@@ -33,9 +29,11 @@ class ScanRoot : public QWidget {
     std::future<void>            connectFuture;
     std::future<QImageContainer> scanFuture;
     lib::SaneException           lastException{SANE_STATUS_GOOD, ""};
+    lib::SaneDevice::snapshot_t  optionsSnapshot;
 
     QRect  previewSize{};
     QTimer progressTimer;
+    int    tabCounter = 0;
 
   public:
     explicit ScanRoot(QWidget *parent);
@@ -46,6 +44,8 @@ class ScanRoot : public QWidget {
     [[nodiscard]] MainWindow      *getMainWindow() const { return mainWindow; }
     [[nodiscard]] lib::SaneDevice &getSaneDevice() { return *saneDevice; }
 
+    [[nodiscard]] ImagesTab *currentTab();
+
     void updateSaneDevice(std::unique_ptr<lib::SaneDevice> device);
 
   public slots:
@@ -54,12 +54,14 @@ class ScanRoot : public QWidget {
     void scanBatch();
     void scanAbort();
     void scanDone();
+    void scanFailed();
     void switchDevice();
 
     void deviceConnected();
     void connectionFailed();
 
     void newTab();
+    void closeTab(int _idx);
     void deviceOptionsReloaded();
     void updateProgressBar();
 
@@ -67,10 +69,14 @@ class ScanRoot : public QWidget {
     void signalConnected();
     void signalConnectionFailed();
     void scanHasFinished();
+    void scanHasFailed();
 
   private:
     void            doConnect();
     QImageContainer doScan();
+
+    void guiStateReady();
+    void guiStateScanning();
 };
 
 } // namespace qscan::gui

@@ -15,21 +15,17 @@ ImageViewer::ImageViewer(QWidget *_parent) : QWidget(_parent), ui(new Ui::ImageV
 ImageViewer::~ImageViewer() {}
 
 void ImageViewer::selectionChanged(QRect _selectionRect) {
-    logger()->debug("Selection changed: {}x{} {}x{}",
-                    _selectionRect.x(),
-                    _selectionRect.y(),
-                    _selectionRect.width(),
-                    _selectionRect.height());
+    ui->clearSelection->setEnabled(!_selectionRect.isNull());
     emit selectionUpdated(_selectionRect);
 }
 
 void ImageViewer::updateSelection(QRect _newSelection) {
-    logger()->warn("UPDATE TO: {}x{} {}x{}", _newSelection.x(), _newSelection.y(), _newSelection.width(), _newSelection.height());
     ui->viewer->updateSelection(_newSelection);
+    ui->clearSelection->setEnabled(!_newSelection.isNull());
 }
 
-void ImageViewer::updateImage(QImage &_img) {
-    ui->viewer->updateImage(_img);
-}
+void ImageViewer::updateImage(QImage &_img) { ui->viewer->updateImage(_img); }
+
+ScanImageView *ImageViewer::imageView() { return ui->viewer; }
 
 } // namespace qscan::gui

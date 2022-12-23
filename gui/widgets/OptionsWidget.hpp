@@ -29,8 +29,9 @@ class OptionsWidget : public QWidget {
     [[nodiscard]] ScanRoot   *getScanRoot() const { return scanRoot; }
     [[nodiscard]] MainWindow *getMainWindow() const;
 
-    QRect maxScanArea();
-    double getDpmm();
+    [[nodiscard]] QRect maxScanArea();
+    [[nodiscard]] QRect currentScanArea();
+    [[nodiscard]] double getDpmm();
 
   public slots:
     void sourceUpdated();

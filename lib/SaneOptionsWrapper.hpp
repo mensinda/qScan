@@ -9,10 +9,10 @@ namespace qscan::lib {
 class SaneOptionsWrapper {
   public:
     struct ScanArea {
-        double bottomRightX;
-        double bottomRightY;
         double topLeftX;
         double topLeftY;
+        double bottomRightX;
+        double bottomRightY;
     };
 
     struct ScanAreaData {

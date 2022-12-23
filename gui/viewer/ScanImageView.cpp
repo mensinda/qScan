@@ -24,9 +24,6 @@ ScanImageView::ScanImageView(QWidget *parent) : QGraphicsView(parent) {
 ScanImageView::~ScanImageView() {}
 
 void ScanImageView::updateImage(const QImage &_img) {
-    if (imagePixmap) {
-        scanScene->removeItem(imagePixmap.get());
-    }
     imagePixmap = std::make_unique<QGraphicsPixmapItem>(QPixmap::fromImage(_img));
     imagePixmap->setZValue(0);
 

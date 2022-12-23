@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ImagesTab</class>
+ <widget class="QWidget" name="ImagesTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>801</width>
+    <height>518</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QWidget" name="controlBar" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="btnSave">
+        <property name="toolTip">
+         <string>Save current image</string>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSaveAll">
+        <property name="toolTip">
+         <string>Save all images as PDF</string>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save-all"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnDelete">
+        <property name="icon">
+         <iconset theme="edit-delete"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRP90">
+        <property name="toolTip">
+         <string>Rotate selected image(s) 90°</string>
+        </property>
+        <property name="icon">
+         <iconset theme="object-rotate-left"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnR180">
+        <property name="toolTip">
+         <string>Rotate selected image(s) 180°</string>
+        </property>
+        <property name="icon">
+         <iconset theme="object-flip-vertical"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRM90">
+        <property name="toolTip">
+         <string>Rotate selected image(s) -90°</string>
+        </property>
+        <property name="icon">
+         <iconset theme="object-rotate-right"/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="seperatorCrop">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnCrop">
+        <property name="text">
+         <string>Crop to selection</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="seperatorUndo">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnUndo">
+        <property name="toolTip">
+         <string>Undo last action</string>
+        </property>
+        <property name="icon">
+         <iconset theme="edit-undo"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRedo">
+        <property name="toolTip">
+         <string>Redo last action</string>
+        </property>
+        <property name="icon">
+         <iconset theme="edit-redo"/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QWidget" name="listRootContainer" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QWidget" name="listControlContainer" native="true">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="btnSelectAll">
+             <property name="toolTip">
+              <string>Select all</string>
+             </property>
+             <property name="icon">
+              <iconset theme="edit-select-all"/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Skip:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="selectStride">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Offset:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="selectOffset">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximum">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="listWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="dragEnabled">
+           <bool>true</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::InternalMove</enum>
+          </property>
+          <property name="defaultDropAction">
+           <enum>Qt::MoveAction</enum>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="qscan::gui::ImageViewer" name="imageViewer" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qscan::gui::ImageViewer</class>
+   <extends>QWidget</extends>
+   <header>ImageViewer.hpp</header>
+   <container>1</container>
+   <slots>
+    <signal>selectionUpdated(QRect)</signal>
+    <slot>updateSelection(QRect)</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>btnR180</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doRotate180()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>492</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCrop</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doCrop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>635</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnRM90</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doRotateM90()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>529</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnRP90</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doRotateP90()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>455</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnRedo</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doRedo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>779</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnSave</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doSave()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>21</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnSaveAll</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doSaveAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>58</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnSelectAll</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doSelectAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnUndo</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doUndo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectStride</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>skipUpdated(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listWidget</sender>
+   <signal>currentItemChanged(QListWidgetItem*,QListWidgetItem*)</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>currentImageUpdated(QListWidgetItem*,QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>139</x>
+     <y>298</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnDelete</sender>
+   <signal>clicked()</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>doDelete()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>imageViewer</sender>
+   <signal>selectionUpdated(QRect)</signal>
+   <receiver>ImagesTab</receiver>
+   <slot>selectionHasUpdated(QRect)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>540</x>
+     <y>279</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>doSelectAll()</slot>
+  <slot>skipUpdated(int)</slot>
+  <slot>doUndo()</slot>
+  <slot>doRedo()</slot>
+  <slot>doCrop()</slot>
+  <slot>doRotateP90()</slot>
+  <slot>doRotateM90()</slot>
+  <slot>doRotate180()</slot>
+  <slot>doSave()</slot>
+  <slot>doSaveAll()</slot>
+  <slot>currentImageUpdated(QListWidgetItem*,QListWidgetItem*)</slot>
+  <slot>doDelete()</slot>
+  <slot>selectionHasUpdated(QRect)</slot>
+ </slots>
+</ui>

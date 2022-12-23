@@ -10,6 +10,8 @@ class ImageViewer;
 
 namespace qscan::gui {
 
+class ScanImageView;
+
 class ImageViewer : public QWidget {
     Q_OBJECT
 
@@ -21,6 +23,8 @@ class ImageViewer : public QWidget {
     virtual ~ImageViewer();
 
     void updateImage(QImage &_img);
+
+    [[nodiscard]] ScanImageView *imageView();
 
   public slots:
     void selectionChanged(QRect _selectionRect);

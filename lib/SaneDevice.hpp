@@ -11,6 +11,8 @@
 namespace qscan::lib {
 
 class SaneDevice {
+  public:
+    using snapshot_t = std::unordered_map<std::string, SaneOption::value_t>;
 
   private:
     std::string name;
@@ -47,9 +49,9 @@ class SaneDevice {
     [[nodiscard]] SaneImage scan();
     [[nodiscard]] double    scanProgress() const;
 
-    [[nodiscard]] std::unordered_map<std::string, SaneOption::value_t> optionsSnapshot() const;
+    [[nodiscard]] snapshot_t optionsSnapshot() const;
 
-    void applyOptionSnapshot(const std::unordered_map<std::string, SaneOption::value_t> &_snapshot);
+    void applyOptionSnapshot(const snapshot_t &_snapshot);
 
     // No copy or move
 

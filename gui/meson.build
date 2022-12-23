@@ -5,6 +5,8 @@ gui_cpp_src = [
 
     'viewer/ScanImageView.cpp',
     'viewer/SelectionOverlay.cpp',
+
+    'util/QImageContainer.cpp',
 ]
 
 gui_hpp_src = [
@@ -17,6 +19,7 @@ widgets = [
     'MainWindow',
     'DeviceElement',
     'DeviceSelection',
+    'ImagesTab',
     'ImageViewer',
     'OptionsWidget',
     'ScanRoot',

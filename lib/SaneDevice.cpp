@@ -168,7 +168,7 @@ double SaneDevice::scanProgress() const {
     return std::min(1.0, (double)readBytes / (double)expectedBytes);
 }
 
-std::unordered_map<std::string, SaneOption::value_t> SaneDevice::optionsSnapshot() const {
+SaneDevice::snapshot_t SaneDevice::optionsSnapshot() const {
     std::unordered_map<std::string, SaneOption::value_t> snapshot{};
     snapshot.reserve(rawOptions.size());
     for (const auto &opt : rawOptions) {
@@ -177,7 +177,7 @@ std::unordered_map<std::string, SaneOption::value_t> SaneDevice::optionsSnapshot
     return snapshot;
 }
 
-void SaneDevice::applyOptionSnapshot(const std::unordered_map<std::string, SaneOption::value_t> &_snapshot) {
+void SaneDevice::applyOptionSnapshot(const snapshot_t &_snapshot) {
     ValueResetter resetter{&disableOptionReload, true};
     for (auto &opt : rawOptions) {
         auto iter = _snapshot.find(opt.getName());

@@ -1,9 +1,10 @@
 #pragma once
 
+#include "SaneDevice.hpp"
+#include "SaneOption.hpp"
 #include <optional>
 #include <string>
 #include <unordered_map>
-#include "SaneOption.hpp"
 
 namespace qscan::gui {
 
@@ -15,7 +16,7 @@ struct QScanConfig {
         std::string model;
         std::string type;
 
-        std::unordered_map<std::string, lib::SaneOption::value_t> options;
+        lib::SaneDevice::snapshot_t options;
     };
 
     std::optional<LastDevice> lastDevice;

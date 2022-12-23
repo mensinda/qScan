@@ -200,6 +200,16 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>qscan::gui::ImageViewer</class>
+   <extends>QWidget</extends>
+   <header>ImageViewer.hpp</header>
+   <container>1</container>
+   <slots>
+    <signal>selectionUpdated(QRect)</signal>
+    <slot>updateSelection(QRect)</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
    <class>qscan::gui::OptionsWidget</class>
    <extends>QWidget</extends>
    <header>OptionsWidget.hpp</header>
@@ -208,16 +218,6 @@
     <signal>scanAreaHasUpdated(QRect)</signal>
     <signal>optionsReloaded()</signal>
     <slot>updateScanArea(QRect)</slot>
-   </slots>
-  </customwidget>
-  <customwidget>
-   <class>qscan::gui::ImageViewer</class>
-   <extends>QWidget</extends>
-   <header>ImageViewer.hpp</header>
-   <container>1</container>
-   <slots>
-    <signal>selectionUpdated(QRect)</signal>
-    <slot>updateSelection(QRect)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -367,6 +367,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>mainTabs</sender>
+   <signal>tabCloseRequested(int)</signal>
+   <receiver>ScanRoot</receiver>
+   <slot>closeTab(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>440</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>scanOne()</slot>
@@ -377,5 +393,6 @@
   <slot>previewSelectionUpdated(QRect)</slot>
   <slot>deviceOptionsReloaded()</slot>
   <slot>scanPreview()</slot>
+  <slot>closeTab(int)</slot>
  </slots>
 </ui>

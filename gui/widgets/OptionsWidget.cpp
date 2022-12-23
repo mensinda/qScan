@@ -21,8 +21,6 @@ void OptionsWidget::reloadOptions() {
     auto modeOpt       = opts.getMode();
     auto scanAreaOpt   = opts.getScanArea();
 
-    emit optionsReloaded();
-
     QSignalBlocker blocker01{ui->coSource};
     QSignalBlocker blocker02{ui->coMode};
     QSignalBlocker blocker03{ui->coResolution};
@@ -98,6 +96,8 @@ void OptionsWidget::reloadOptions() {
         ui->bottomRightX->setSuffix(suffix);
         ui->bottomRightY->setSuffix(suffix);
     }
+
+    emit optionsReloaded();
 }
 
 void OptionsWidget::sourceUpdated() {
@@ -125,10 +125,10 @@ void OptionsWidget::scanAreaUpdated() {
     SaneOptionsWrapper &opts = scanRoot->getSaneDevice().getOptions();
 
     const SaneOptionsWrapper::ScanArea area{
-        ui->bottomRightX->value(),
-        ui->bottomRightY->value(),
         ui->topLeftX->value(),
         ui->topLeftY->value(),
+        ui->bottomRightX->value(),
+        ui->bottomRightY->value(),
     };
 
     if (opts.setScanArea(area)) {
@@ -140,23 +140,14 @@ void OptionsWidget::scanAreaUpdated() {
         return;
     }
 
-    const double dpmm = getDpmm();
+    QRect scanAreaRect = currentScanArea();
 
-    switch (scanAreaOpt->unit) {
-        case SANE_UNIT_PIXEL:
-            emit scanAreaHasUpdated({
-                QPoint{(int)ui->topLeftX->value(),     (int)ui->topLeftY->value()    },
-                QPoint{(int)ui->bottomRightX->value(), (int)ui->bottomRightY->value()},
-            });
-            break;
-        case SANE_UNIT_MM:
-            emit scanAreaHasUpdated({
-                QPoint{(int)(ui->topLeftX->value() * dpmm),     (int)(ui->topLeftY->value() * dpmm)    },
-                QPoint{(int)(ui->bottomRightX->value() * dpmm), (int)(ui->bottomRightY->value() * dpmm)},
-            });
-            break;
-        default: throw std::runtime_error("Unsupported unit: " + enum2str::toStr(scanAreaOpt->unit));
+    // No need for a selection if it is the max anyway
+    if (scanAreaRect == maxScanArea()) {
+        scanAreaRect = QRect();
     }
+
+    emit scanAreaHasUpdated(scanAreaRect);
 }
 
 void OptionsWidget::batchSettingsUpdated() {}
@@ -202,10 +193,10 @@ void OptionsWidget::updateScanArea(QRect _rect) {
     }
 
     const SaneOptionsWrapper::ScanArea area{
-        ui->bottomRightX->value(),
-        ui->bottomRightY->value(),
         ui->topLeftX->value(),
         ui->topLeftY->value(),
+        ui->bottomRightX->value(),
+        ui->bottomRightY->value(),
     };
 
     if (opts.setScanArea(area)) {
@@ -240,6 +231,43 @@ QRect OptionsWidget::maxScanArea() {
                 (int)(minA.topLeftY * dpmm),
                 (int)(maxA.bottomRightX * dpmm),
                 (int)(maxA.bottomRightY * dpmm),
+            };
+        default: throw std::runtime_error("Unsupported unit: " + enum2str::toStr(scanAreaOpt->unit));
+    }
+}
+
+QRect OptionsWidget::currentScanArea() {
+    SaneOptionsWrapper &opts        = scanRoot->getSaneDevice().getOptions();
+    const auto         &scanAreaOpt = opts.getScanArea();
+    if (!scanAreaOpt) {
+        return {};
+    }
+
+    const auto &maxA = scanAreaOpt->max;
+    const auto &minA = scanAreaOpt->min;
+    const auto &curA = scanAreaOpt->current;
+
+    // If we are close to the maximal scan area, just use
+    // the `maxScanArea` to avoid rounding issues.
+    const double epsilon = 0.01;
+    if ((std::abs(curA.topLeftX - minA.topLeftX) < epsilon) && (std::abs(curA.topLeftY - minA.topLeftY) < epsilon) &&
+        (std::abs(curA.bottomRightX - maxA.bottomRightX) < epsilon) &&
+        (std::abs(curA.bottomRightY - maxA.bottomRightY) < epsilon)) {
+        return maxScanArea();
+    }
+
+    const double dpmm = getDpmm();
+
+    switch (scanAreaOpt->unit) {
+        case SANE_UNIT_PIXEL:
+            return {
+                QPoint{(int)curA.topLeftX,     (int)curA.topLeftY    },
+                QPoint{(int)curA.bottomRightX, (int)curA.bottomRightY},
+            };
+        case SANE_UNIT_MM:
+            return {
+                QPoint{(int)(curA.topLeftX * dpmm),     (int)(curA.topLeftY * dpmm)    },
+                QPoint{(int)(curA.bottomRightX * dpmm), (int)(curA.bottomRightY * dpmm)},
             };
         default: throw std::runtime_error("Unsupported unit: " + enum2str::toStr(scanAreaOpt->unit));
     }

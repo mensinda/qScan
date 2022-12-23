@@ -1,0 +1,1 @@
+#include "QImageContainer.hpp"

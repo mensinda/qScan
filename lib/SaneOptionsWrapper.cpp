@@ -39,22 +39,22 @@ std::optional<SaneOptionsWrapper::ScanAreaData> SaneOptionsWrapper::getScanArea(
     if (opts[topLeftYIdx].getType() == SANE_TYPE_INT) {
         return ScanAreaData{
             ScanArea{
-                     (double)get<int>(opts[bottomRightXIdx].getValue()),
-                     (double)get<int>(opts[bottomRightYIdx].getValue()),
                      (double)get<int>(opts[topLeftXIdx].getValue()),
                      (double)get<int>(opts[topLeftYIdx].getValue()),
+                     (double)get<int>(opts[bottomRightXIdx].getValue()),
+                     (double)get<int>(opts[bottomRightYIdx].getValue()),
                      },
             ScanArea{
-                     (double)get<SaneOption::RangeInt>(opts[bottomRightXIdx].getConstraint()).min,
-                     (double)get<SaneOption::RangeInt>(opts[bottomRightYIdx].getConstraint()).min,
                      (double)get<SaneOption::RangeInt>(opts[topLeftXIdx].getConstraint()).min,
                      (double)get<SaneOption::RangeInt>(opts[topLeftYIdx].getConstraint()).min,
+                     (double)get<SaneOption::RangeInt>(opts[bottomRightXIdx].getConstraint()).min,
+                     (double)get<SaneOption::RangeInt>(opts[bottomRightYIdx].getConstraint()).min,
                      },
             ScanArea{
-                     (double)get<SaneOption::RangeInt>(opts[bottomRightXIdx].getConstraint()).max,
-                     (double)get<SaneOption::RangeInt>(opts[bottomRightYIdx].getConstraint()).max,
                      (double)get<SaneOption::RangeInt>(opts[topLeftXIdx].getConstraint()).max,
                      (double)get<SaneOption::RangeInt>(opts[topLeftYIdx].getConstraint()).max,
+                     (double)get<SaneOption::RangeInt>(opts[bottomRightXIdx].getConstraint()).max,
+                     (double)get<SaneOption::RangeInt>(opts[bottomRightYIdx].getConstraint()).max,
                      },
             opts[topLeftYIdx].getUnit(),
         };
@@ -62,22 +62,22 @@ std::optional<SaneOptionsWrapper::ScanAreaData> SaneOptionsWrapper::getScanArea(
 
     return ScanAreaData{
         ScanArea{
-                 get<double>(opts[bottomRightXIdx].getValue()),
-                 get<double>(opts[bottomRightYIdx].getValue()),
                  get<double>(opts[topLeftXIdx].getValue()),
                  get<double>(opts[topLeftYIdx].getValue()),
+                 get<double>(opts[bottomRightXIdx].getValue()),
+                 get<double>(opts[bottomRightYIdx].getValue()),
                  },
         ScanArea{
-                 get<SaneOption::RangeDouble>(opts[bottomRightXIdx].getConstraint()).min,
-                 get<SaneOption::RangeDouble>(opts[bottomRightYIdx].getConstraint()).min,
                  get<SaneOption::RangeDouble>(opts[topLeftXIdx].getConstraint()).min,
                  get<SaneOption::RangeDouble>(opts[topLeftYIdx].getConstraint()).min,
+                 get<SaneOption::RangeDouble>(opts[bottomRightXIdx].getConstraint()).min,
+                 get<SaneOption::RangeDouble>(opts[bottomRightYIdx].getConstraint()).min,
                  },
         ScanArea{
-                 get<SaneOption::RangeDouble>(opts[bottomRightXIdx].getConstraint()).max,
-                 get<SaneOption::RangeDouble>(opts[bottomRightYIdx].getConstraint()).max,
                  get<SaneOption::RangeDouble>(opts[topLeftXIdx].getConstraint()).max,
                  get<SaneOption::RangeDouble>(opts[topLeftYIdx].getConstraint()).max,
+                 get<SaneOption::RangeDouble>(opts[bottomRightXIdx].getConstraint()).max,
+                 get<SaneOption::RangeDouble>(opts[bottomRightYIdx].getConstraint()).max,
                  },
         opts[topLeftYIdx].getUnit(),
     };
