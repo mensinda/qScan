@@ -39,4 +39,5 @@ gui_exe = executable(
     'qScan', [gui_cpp_src, gui_hpp_src, gui_ui, gui_moc],
     dependencies: [qt_dep, qscan_lib_dep, magick_dep],
     include_directories: ['widgets', 'viewer'],
+    install: true,
 )

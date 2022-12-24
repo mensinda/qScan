@@ -45,3 +45,19 @@ qt_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets'], include_type: 's
 subdir('lib')
 subdir('gui')
 subdir('test')
+
+qscan_desktop = configure_file(
+    configuration: {
+        'PROJ_VERSION': meson.project_version(),
+        'BIN_DIR': get_option('prefix') / get_option('bindir'),
+    },
+    input: 'qScan.desktop.in',
+    output: 'qScan.desktop',
+    install: true,
+    install_dir: get_option('datadir') / 'applications',
+)
+
+install_data(
+    'img' / 'qScan.png',
+    install_dir: get_option('datadir') / 'pixmaps',
+)
