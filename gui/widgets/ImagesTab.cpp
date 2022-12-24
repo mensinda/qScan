@@ -1,8 +1,10 @@
 #include "ImagesTab.hpp"
+#include "ui_ImagesTab.h"
+
 #include "util/ImageEditor.hpp"
 #include "ScanImageView.hpp"
 #include "qscan_log.hpp"
-#include "ui_ImagesTab.h"
+
 #include <QFileDialog>
 #include <QMessageBox>
 

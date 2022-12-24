@@ -1,6 +1,7 @@
 #include "ImageViewer.hpp"
-#include "qscan_log.hpp"
 #include "ui_ImageViewer.h"
+
+#include "qscan_log.hpp"
 
 using namespace qscan::lib;
 

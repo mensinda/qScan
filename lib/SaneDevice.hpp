@@ -3,6 +3,7 @@
 #include "SaneImage.hpp"
 #include "SaneOption.hpp"
 #include "SaneOptionsWrapper.hpp"
+
 #include <sane/sane.h>
 #include <string>
 #include <unordered_map>

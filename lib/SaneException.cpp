@@ -1,6 +1,7 @@
 #include "SaneException.hpp"
 
 #include "enum2str.hpp"
+
 #include <spdlog/spdlog.h>
 
 namespace qscan::lib {

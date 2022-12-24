@@ -2,6 +2,7 @@
 #include "widgets/MainWindow.hpp"
 #include "SaneException.hpp"
 #include "qscan_log.hpp"
+
 #include <Magick++.h>
 
 #include <QApplication>

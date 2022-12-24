@@ -1,10 +1,11 @@
 #include "DeviceSelection.hpp"
 #include "ui_DeviceSelection.h"
-#include <future>
 
 #include "DeviceElement.hpp"
 #include "MainWindow.hpp"
 #include "qscan_log.hpp"
+
+#include <future>
 
 using namespace qscan::lib;
 
@@ -13,7 +14,9 @@ namespace qscan::gui {
 DeviceSelection::DeviceSelection(QWidget *parent) : QWidget(parent), ui(new Ui::DeviceSelection) { ui->setupUi(this); }
 
 DeviceSelection::~DeviceSelection() {
-    if (scanFuture.valid()) { scanFuture.get(); };
+    if (scanFuture.valid()) {
+        scanFuture.get();
+    };
 }
 
 void DeviceSelection::refreshDevices() {

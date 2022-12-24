@@ -1,12 +1,11 @@
 #include "MainWindow.hpp"
-#include "ScanRoot.hpp"
+#include "ui_MainWindow.h"
 
+#include "ScanRoot.hpp"
 #include "qscan_config.hpp"
 #include "qscan_log.hpp"
 
 #include <QMessageBox>
-
-#include "ui_MainWindow.h"
 
 using namespace qscan::lib;
 
@@ -41,7 +40,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::showAbout() {
-    const char* about = R"(
+    const char *about = R"(
 <b>Version: %1</b>
 <br>
 <br>
@@ -51,10 +50,7 @@ Authors:
 </ul>
 )";
 
-    QMessageBox::about(
-        this,
-        tr("About QScan"),
-        tr(about).arg(QString::fromStdString(QSCAN_VERSION_STR)));
+    QMessageBox::about(this, tr("About QScan"), tr(about).arg(QString::fromStdString(QSCAN_VERSION_STR)));
 }
 void MainWindow::showAboutQt() { QMessageBox::aboutQt(this); }
 

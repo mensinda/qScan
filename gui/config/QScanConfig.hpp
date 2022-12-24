@@ -2,10 +2,12 @@
 
 #include "SaneDevice.hpp"
 #include "SaneOption.hpp"
-#include <QByteArray>
+
 #include <optional>
 #include <string>
 #include <unordered_map>
+
+#include <QByteArray>
 
 namespace qscan::gui {
 
@@ -31,8 +33,8 @@ struct QScanConfig {
     };
 
     std::optional<LastDevice> lastDevice;
-    Window window;
-    BatchScanning batch;
+    Window                    window;
+    BatchScanning             batch;
 
     void save();
     void load();

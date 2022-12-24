@@ -1,6 +1,8 @@
 #include "SaneImage.hpp"
+
 #include "enum2str.hpp"
 #include "qscan_log.hpp"
+
 #include <cstring>
 #include <stdexcept>
 

@@ -1,9 +1,11 @@
 #pragma once
 
-#include <SaneBackend.hpp>
-#include <QMainWindow>
-#include <memory>
 #include "config/QScanConfig.hpp"
+
+#include <SaneBackend.hpp>
+#include <memory>
+
+#include <QMainWindow>
 
 namespace Ui {
 class MainWindow;
@@ -16,14 +18,14 @@ class MainWindow : public QMainWindow {
 
   private:
     lib::SaneBackend &backend;
-    QScanConfig &cfg;
+    QScanConfig      &cfg;
 
   public:
     explicit MainWindow(QWidget *parent, lib::SaneBackend &_backend, QScanConfig &_cfg);
     virtual ~MainWindow();
 
     [[nodiscard]] lib::SaneBackend &getBackend() { return backend; }
-    [[nodiscard]] QScanConfig &config() { return cfg; }
+    [[nodiscard]] QScanConfig      &config() { return cfg; }
 
     void showDeviceSelection();
     void deviceSelected(std::unique_ptr<lib::SaneDevice> device);

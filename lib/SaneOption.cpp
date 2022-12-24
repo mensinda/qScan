@@ -1,8 +1,10 @@
 #include "SaneOption.hpp"
+
 #include "SaneDevice.hpp"
 #include "SaneException.hpp"
 #include "enum2str.hpp"
 #include "qscan_log.hpp"
+
 #include <algorithm>
 #include <numeric>
 

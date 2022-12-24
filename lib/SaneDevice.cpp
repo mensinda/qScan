@@ -1,11 +1,10 @@
 #include "SaneDevice.hpp"
+
 #include "util/ValueResetter.hpp"
 #include "SaneException.hpp"
 #include "SaneImage.hpp"
 #include "enum2str.hpp"
 #include "qscan_log.hpp"
-
-#include <fstream>
 
 namespace qscan::lib {
 
@@ -191,8 +190,6 @@ void SaneDevice::applyOptionSnapshot(const snapshot_t &_snapshot) {
     reload_options();
 }
 
-void SaneDevice::cancelScan() {
-    sane_cancel(handle);
-}
+void SaneDevice::cancelScan() { sane_cancel(handle); }
 
 } // namespace qscan::lib

@@ -1,6 +1,8 @@
 #include "SaneOptionsWrapper.hpp"
-#include "util/constStringHash.hpp"
+
 #include "qscan_log.hpp"
+#include "util/constStringHash.hpp"
+
 #include <algorithm>
 #include <stdexcept>
 

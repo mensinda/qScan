@@ -1,9 +1,11 @@
 #pragma once
 
 #include "SaneBackend.hpp"
-#include <QWidget>
+
 #include <future>
 #include <memory>
+
+#include <QWidget>
 
 namespace Ui {
 class DeviceElement;
@@ -18,7 +20,7 @@ class DeviceElement : public QWidget {
 
   private:
     std::unique_ptr<Ui::DeviceElement> ui;
-    std::unique_ptr<lib::SaneDevice> saneDevice;
+    std::unique_ptr<lib::SaneDevice>   saneDevice;
 
     DeviceSelection *selectionWidget;
 
@@ -33,4 +35,4 @@ class DeviceElement : public QWidget {
     void thisElementSelected();
 };
 
-}
+} // namespace qscan::gui

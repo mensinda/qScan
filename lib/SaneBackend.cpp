@@ -1,12 +1,12 @@
 #include "SaneBackend.hpp"
 
-#include <cstring>
-#include <sane/sane.h>
-#include <stdexcept>
-
 #include "SaneException.hpp"
 #include "enum2str.hpp"
 #include "qscan_log.hpp"
+
+#include <cstring>
+#include <sane/sane.h>
+#include <stdexcept>
 
 namespace qscan::lib {
 

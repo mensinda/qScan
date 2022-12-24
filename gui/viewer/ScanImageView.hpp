@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SelectionOverlay.hpp"
+
 #include <QGraphicsView>
 
 namespace qscan::gui {
@@ -20,7 +21,7 @@ class ScanImageView : public QGraphicsView {
     virtual ~ScanImageView();
 
     [[nodiscard]] double getScale() const;
-    [[nodiscard]] QRect getSelection() const;
+    [[nodiscard]] QRect  getSelection() const;
 
     void updateImage(const QImage &_img);
     void updateSelection(QRect _newSelection);

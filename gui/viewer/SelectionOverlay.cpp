@@ -1,4 +1,5 @@
 #include "SelectionOverlay.hpp"
+
 #include <QPainter>
 
 namespace qscan::gui {
@@ -22,9 +23,19 @@ void SelectionOverlay::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setRenderHint(QPainter::Antialiasing, false);
 
     QRect rTop{0, 0, imgBounds.width(), selection.y()};
-    QRect rBot{0, selection.y() + selection.height(), imgBounds.width(), imgBounds.height() - (selection.y() + selection.height())};
+    QRect rBot{
+        0,
+        selection.y() + selection.height(),
+        imgBounds.width(),
+        imgBounds.height() - (selection.y() + selection.height()),
+    };
     QRect rLeft{0, selection.y(), selection.x(), selection.height()};
-    QRect rRight{selection.x() + selection.width(), selection.y(), imgBounds.width() - (selection.x() + selection.width()), selection.height()};
+    QRect rRight{
+        selection.x() + selection.width(),
+        selection.y(),
+        imgBounds.width() - (selection.x() + selection.width()),
+        selection.height(),
+    };
 
     QColor bgColor{0, 0, 0, 192};
     painter->fillRect(rTop, bgColor);
@@ -32,10 +43,20 @@ void SelectionOverlay::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->fillRect(rLeft, bgColor);
     painter->fillRect(rRight, bgColor);
 
-    QLine lTop(selection.x(), selection.y(), selection.x() + selection.width(), selection.y());
-    QLine lBot(selection.x(), selection.y() + selection.height(), selection.x() + selection.width(), selection.y() + selection.height());
-    QLine lLeft(selection.x(), selection.y(), selection.x(), selection.y() + selection.height());
-    QLine lRight(selection.x() + selection.width(), selection.y(), selection.x() + selection.width(), selection.y() + selection.height());
+    QLine lTop{selection.x(), selection.y(), selection.x() + selection.width(), selection.y()};
+    QLine lBot{
+        selection.x(),
+        selection.y() + selection.height(),
+        selection.x() + selection.width(),
+        selection.y() + selection.height(),
+    };
+    QLine lLeft{selection.x(), selection.y(), selection.x(), selection.y() + selection.height()};
+    QLine lRight{
+        selection.x() + selection.width(),
+        selection.y(),
+        selection.x() + selection.width(),
+        selection.y() + selection.height(),
+    };
 
     QPen pen{Qt::yellow};
     pen.setWidth(0);
@@ -54,7 +75,7 @@ void SelectionOverlay::updateSelection(QRect _selection) {
 void SelectionOverlay::updateImageRect(QRect _imgBounds) {
     imgBounds = _imgBounds;
     if (selection.isNull()) {
-        return ;
+        return;
     }
     selection = selection.intersected(imgBounds);
 }

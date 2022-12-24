@@ -1,11 +1,13 @@
 #pragma once
 
 #include "SaneImage.hpp"
+
 #include <Magick++.h>
-#include <QImage>
 #include <cstdint>
 #include <memory>
 #include <vector>
+
+#include <QImage>
 
 namespace qscan::gui {
 

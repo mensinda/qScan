@@ -1,8 +1,10 @@
 #pragma once
 
 #include "config/QScanConfig.hpp"
-#include <QWidget>
+
 #include <memory>
+
+#include <QWidget>
 
 namespace Ui {
 class OptionsWidget;
@@ -30,8 +32,8 @@ class OptionsWidget : public QWidget {
     [[nodiscard]] ScanRoot   *getScanRoot() const { return scanRoot; }
     [[nodiscard]] MainWindow *getMainWindow() const;
 
-    [[nodiscard]] QRect maxScanArea();
-    [[nodiscard]] QRect currentScanArea();
+    [[nodiscard]] QRect  maxScanArea();
+    [[nodiscard]] QRect  currentScanArea();
     [[nodiscard]] double getDpmm();
 
     [[nodiscard]] QScanConfig::BatchScanning batchConfig();

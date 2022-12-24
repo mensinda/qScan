@@ -1,10 +1,12 @@
 #pragma once
 
 #include "SaneBackend.hpp"
-#include <QVBoxLayout>
-#include <QWidget>
+
 #include <future>
 #include <memory>
+
+#include <QVBoxLayout>
+#include <QWidget>
 
 namespace Ui {
 class DeviceSelection;

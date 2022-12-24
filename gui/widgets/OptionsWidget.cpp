@@ -1,17 +1,16 @@
 #include "OptionsWidget.hpp"
+#include "ui_OptionsWidget.h"
+
 #include "MainWindow.hpp"
 #include "ScanRoot.hpp"
 #include "enum2str.hpp"
 #include "qscan_log.hpp"
-#include "ui_OptionsWidget.h"
 
 using namespace qscan::lib;
 
 namespace qscan::gui {
 
-OptionsWidget::OptionsWidget(QWidget *_parent) : QWidget(_parent), ui(new Ui::OptionsWidget) {
-    ui->setupUi(this);
-}
+OptionsWidget::OptionsWidget(QWidget *_parent) : QWidget(_parent), ui(new Ui::OptionsWidget) { ui->setupUi(this); }
 
 OptionsWidget::~OptionsWidget() { scanRoot->getMainWindow()->config().batch = batchConfig(); }
 

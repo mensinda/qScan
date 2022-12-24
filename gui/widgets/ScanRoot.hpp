@@ -4,11 +4,13 @@
 #include "ImagesTab.hpp"
 #include "SaneDevice.hpp"
 #include "SaneException.hpp"
+
+#include <chrono>
+#include <future>
+
 #include <QTimer>
 #include <QToolButton>
 #include <QWidget>
-#include <chrono>
-#include <future>
 
 namespace Ui {
 class ScanRoot;

@@ -1,7 +1,8 @@
 #include "DeviceElement.hpp"
+#include "ui_DeviceElement.h"
+
 #include "DeviceSelection.hpp"
 #include "qscan_log.hpp"
-#include "ui_DeviceElement.h"
 
 namespace qscan::gui {
 

@@ -1,5 +1,7 @@
 #include "ScanImageView.hpp"
+
 #include "qscan_log.hpp"
+
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
 
@@ -33,9 +35,7 @@ void ScanImageView::updateImage(const QImage &_img) {
     scanScene->addItem(imagePixmap.get());
 }
 
-void ScanImageView::drawBackground(QPainter *painter, const QRectF &rect) {
-    painter->fillRect(rect, Qt::darkGray);
-}
+void ScanImageView::drawBackground(QPainter *painter, const QRectF &rect) { painter->fillRect(rect, Qt::darkGray); }
 
 double ScanImageView::getScale() const {
     // This assumes that we only ever translate and scale the scene
@@ -106,9 +106,7 @@ void ScanImageView::mouseReleaseEvent(QMouseEvent *event) {
     QGraphicsView::mouseReleaseEvent(event);
 }
 
-void ScanImageView::updateSelection(QRect _newSelection) {
-    overlay->updateSelection(_newSelection);
-}
+void ScanImageView::updateSelection(QRect _newSelection) { overlay->updateSelection(_newSelection); }
 
 QRect ScanImageView::getSelection() const { return overlay->getSelection(); }
 

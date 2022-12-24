@@ -1,9 +1,11 @@
 #pragma once
 
 #include "util/QImageContainer.hpp"
+
+#include <memory>
+
 #include <QListWidgetItem>
 #include <QWidget>
-#include <memory>
 
 namespace Ui {
 class ImagesTab;

@@ -61,7 +61,7 @@ class SaneImage {
 
     void setup(SANE_Parameters _parameters);
 
-    [[nodiscard]]  size_t width() const;
+    [[nodiscard]] size_t width() const;
     [[nodiscard]] size_t height() const;
     [[nodiscard]] size_t depth() const;
     [[nodiscard]] size_t size() const;

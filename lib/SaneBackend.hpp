@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SaneDevice.hpp"
+
 #include <functional>
 #include <memory>
 #include <string>
@@ -31,8 +32,8 @@ class SaneBackend {
     SaneBackend &operator=(const SaneBackend &) = delete;
     SaneBackend &operator=(SaneBackend &&)      = delete;
 
-    [[nodiscard]] DeviceList find_devices();
-    [[nodiscard]] int saneVersion();
+    [[nodiscard]] DeviceList  find_devices();
+    [[nodiscard]] int         saneVersion();
     [[nodiscard]] std::string saneVersionStr();
 
     [[nodiscard]] static std::string saneUnitToDisplayString(SANE_Unit unit);

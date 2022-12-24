@@ -77,14 +77,26 @@ SortUsingDeclarations: true
 ReflowComments:        true
 
 IncludeCategories:
- - Regex: '[a-z]+/[A-Z][a-zA-Z0-9]*.[ch]pp'
-   Priority: 9
- - Regex: '[A-Z][a-zA-Z0-9]*.[ch]pp'
+ - Regex: '^"[a-z]+/[A-Z][a-zA-Z0-9]*\.[ch]pp"'
+   SortPriority: 5
    Priority: 10
+   CaseSensitive: true
+ - Regex: '^"[A-Z][a-zA-Z0-9]*\.[ch]pp"'
+   SortPriority: 10
+   Priority: 10
+   CaseSensitive: true
+ - Regex: '^".*\.[ch]pp"'
+   SortPriority: 15
+   Priority: 10
+ - Regex: '^"ui_.*\.h"'
+   Priority: 0
+ - Regex: '^<Q.*'
+   Priority: 20
  - Regex: '.*'
    Priority: 15
 
 IncludeIsMainRegex: ''
+IncludeBlocks: Regroup
 
 IndentCaseBlocks:           true
 IndentCaseLabels:           true

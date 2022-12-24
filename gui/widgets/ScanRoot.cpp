@@ -1,14 +1,15 @@
 #include "ScanRoot.hpp"
-#include "util/QImageContainer.hpp"
+#include "ui_ScanRoot.h"
+
+#include "ImagesTab.hpp"
 #include "MainWindow.hpp"
-#include <QMessageBox>
-#include <QTabBar>
+#include "qscan_log.hpp"
+
 #include <chrono>
 #include <future>
 
-#include "ImagesTab.hpp"
-#include "qscan_log.hpp"
-#include "ui_ScanRoot.h"
+#include <QMessageBox>
+#include <QTabBar>
 
 using namespace qscan::lib;
 using namespace std::chrono_literals;

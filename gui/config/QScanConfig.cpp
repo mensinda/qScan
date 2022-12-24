@@ -1,11 +1,13 @@
 #include "QScanConfig.hpp"
-#include "util/constStringHash.hpp"
-#include "qscan_log.hpp"
 
-#include <nlohmann/json.hpp>
-#include <QStandardPaths>
+#include "qscan_log.hpp"
+#include "util/constStringHash.hpp"
+
 #include <filesystem>
 #include <fstream>
+#include <nlohmann/json.hpp>
+
+#include <QStandardPaths>
 
 using json   = nlohmann::json;
 namespace fs = std::filesystem;
@@ -159,7 +161,7 @@ void QScanConfig::load() {
     if (!ifs.is_open()) {
         return;
     }
-    json          j;
+    json j;
     ifs >> j;
     from_json(j, *this);
 }
