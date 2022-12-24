@@ -3,14 +3,15 @@
 #include "MainWindow.hpp"
 #include <QMessageBox>
 #include <QTabBar>
+#include <chrono>
 #include <future>
 
 #include "ImagesTab.hpp"
 #include "qscan_log.hpp"
 #include "ui_ScanRoot.h"
 
-
 using namespace qscan::lib;
+using namespace std::chrono_literals;
 
 namespace qscan::gui {
 
@@ -18,12 +19,16 @@ ScanRoot::ScanRoot(QWidget *parent) : QWidget(parent), ui(new Ui::ScanRoot), pro
     ui->setupUi(this);
 
     ui->mainTabs->tabBar()->setTabButton(0, QTabBar::RightSide, nullptr);
+    ui->lScanInfo->hide();
 
-    progressTimer.setInterval(250);
+    progressTimer.setInterval(25);
+
+    delayScanUntil = std::chrono::time_point<std::chrono::system_clock>::min();
+    delayScanStart = std::chrono::time_point<std::chrono::system_clock>::min();
 
     QObject::connect(&progressTimer, SIGNAL(timeout()), this, SLOT(updateProgressBar()));
-    QObject::connect(this, SIGNAL(scanHasFinished()), this, SLOT(scanDone()));
-    QObject::connect(this, SIGNAL(scanHasFailed()), this, SLOT(scanFailed()));
+    QObject::connect(this, SIGNAL(scanHasFinished()), this, SLOT(handleScanDone()));
+    QObject::connect(this, SIGNAL(scanHasFailed()), this, SLOT(handleScanFailed()));
     QObject::connect(this, SIGNAL(signalConnected()), this, SLOT(deviceConnected()));
     QObject::connect(this, SIGNAL(signalConnectionFailed()), this, SLOT(connectionFailed()));
 }
@@ -41,31 +46,38 @@ ScanRoot::~ScanRoot() {
 }
 
 QImageContainer ScanRoot::doScan() {
+    while (delayScanUntil > std::chrono::system_clock::now() && numPendingScans > 0) {
+        // This is not 100% accurate, but definitely good enough since the
+        // total delay is measured in seconds anyway...
+        std::this_thread::sleep_for(25ms);
+    }
+
+    // The scan was canceled during the delay
+    if (numPendingScans <= 0) {
+        lastException = SaneException(SANE_STATUS_CANCELLED, "The scan was canceled");
+        emit scanHasFailed();
+        return {};
+    }
+
     try {
         SaneImage img = saneDevice->scan();
-        auto      raw = img.asRGB8();
-
-        // Fixup for Qt QImage::Format_RGB888 does not seem to work
-        std::vector<uint32_t> rawBytes(raw.size());
-        for (size_t i = 0; i < raw.size(); ++i) {
-            rawBytes[i] = qRgb(raw[i].r, raw[i].g, raw[i].b);
-        }
+        auto      raw = img.asRGBA8();
 
         QImage qtImage{
-            const_cast<const uchar *>(reinterpret_cast<uchar *>(rawBytes.data())),
+            const_cast<const uchar *>(reinterpret_cast<uchar *>(raw.data())),
             (int)img.width(),
-            (int)(rawBytes.size() / img.width()),
-            QImage::Format_ARGB32,
+            (int)(raw.size() / img.width()),
+            QImage::Format_RGBA8888,
         };
 
         emit scanHasFinished();
-        return {std::move(rawBytes), {}, std::move(qtImage)};
+        return {std::move(raw), {}, std::move(qtImage)};
     } catch (const SaneException &e) {
         lastException = e;
-        emit scanFailed();
+        emit scanHasFailed();
     } catch (const std::exception &e) {
         lastException = SaneException(SANE_STATUS_INVAL, e.what());
-        emit scanFailed();
+        emit scanHasFailed();
     }
     return {};
 }
@@ -80,6 +92,7 @@ void ScanRoot::guiStateScanning() {
     ui->btnScanBatch->setEnabled(false);
     ui->btnStop->setEnabled(true);
     ui->mainTabs->setEnabled(false);
+    ui->lScanInfo->show();
 
     progressTimer.start();
 }
@@ -95,9 +108,10 @@ void ScanRoot::guiStateReady() {
     ui->btnScanBatch->setEnabled(true);
     ui->btnStop->setEnabled(false);
     ui->mainTabs->setEnabled(true);
+    ui->lScanInfo->hide();
 }
 
-void ScanRoot::scanDone() {
+void ScanRoot::handleScanDone() {
     auto *tab = currentTab();
     if (tab == nullptr) {
         auto [_a, _b, qtImage] = scanFuture.get();
@@ -107,6 +121,22 @@ void ScanRoot::scanDone() {
         mainWindow->setCanSave(true);
     }
 
+    if (--numPendingScans > 0) {
+        int delay = ui->settings->batchConfig().delay;
+        if (delay > 0) {
+            delayScanStart = std::chrono::system_clock::now();
+            delayScanUntil = delayScanStart + std::chrono::seconds(delay);
+        } else {
+            delayScanUntil = delayScanStart = std::chrono::time_point<std::chrono::system_clock>::min();
+        }
+        scanFuture = std::async(std::launch::async, &ScanRoot::doScan, this);
+
+        // Return early to continue
+        return;
+    }
+
+    // The scan process has finished
+    numPendingScans = 0; // Should not be required but just to be sure...
     if (!optionsSnapshot.empty()) {
         saneDevice->applyOptionSnapshot(optionsSnapshot);
         optionsSnapshot.clear();
@@ -116,18 +146,38 @@ void ScanRoot::scanDone() {
     guiStateReady();
 }
 
-void ScanRoot::scanFailed() {
+void ScanRoot::handleScanFailed() {
     guiStateReady();
+    numPendingScans = 0;
     if (!optionsSnapshot.empty()) {
         saneDevice->applyOptionSnapshot(optionsSnapshot);
         optionsSnapshot.clear();
     }
 
-    QMessageBox::critical(this,
-                          tr("Scanning failed"),
-                          tr("<b>Failed to scan:</b><br>%1<br><br><code>%2</code>")
-                              .arg(QString::fromStdString(saneDevice->getName()))
-                              .arg(lastException.what()));
+    logger()->error("Scan failed with: {}", lastException.what());
+
+    switch (lastException.saneStatus()) {
+        case SANE_STATUS_GOOD: break;
+        case SANE_STATUS_CANCELLED:
+            QMessageBox::information(this, tr("Scan canceled"), tr("The scan process was canceled"));
+            break;
+        case SANE_STATUS_NO_DOCS:
+            QMessageBox::information(this, tr("ADF empty"), tr("The automatic document feeder is out of documents"));
+            break;
+        case SANE_STATUS_JAMMED:
+            QMessageBox::critical(this, tr("ADF jammed"), tr("The automatic document feeder is jammed"));
+            break;
+        case SANE_STATUS_COVER_OPEN:
+            QMessageBox::warning(this, tr("Lid open"), tr("The scanner lid is open. Please close it and try again"));
+            break;
+        default:
+            QMessageBox::critical(this,
+                                  tr("Scanning failed"),
+                                  tr("<b>Failed to scan:</b><br>%1<br><br><code>%2</code>")
+                                      .arg(QString::fromStdString(saneDevice->getName()))
+                                      .arg(lastException.what()));
+            break;
+    }
 }
 
 void ScanRoot::scanPreview() {
@@ -157,7 +207,8 @@ void ScanRoot::scanPreview() {
     }
 
     ui->mainTabs->setCurrentIndex(0);
-    scanFuture = std::async(std::launch::async, &ScanRoot::doScan, this);
+    numPendingScans = 1;
+    scanFuture      = std::async(std::launch::async, &ScanRoot::doScan, this);
 }
 
 void ScanRoot::scanOne() {
@@ -166,11 +217,26 @@ void ScanRoot::scanOne() {
         newTab();
     }
     guiStateScanning();
-    scanFuture = std::async(std::launch::async, &ScanRoot::doScan, this);
+    numPendingScans = 1;
+    scanFuture      = std::async(std::launch::async, &ScanRoot::doScan, this);
 }
 
-void ScanRoot::scanBatch() {}
-void ScanRoot::scanAbort() {}
+void ScanRoot::scanBatch() {
+    // New tab when on preview
+    if (ui->mainTabs->currentIndex() == 0) {
+        newTab();
+    }
+
+    guiStateScanning();
+    int max         = ui->settings->batchConfig().max;
+    numPendingScans = max <= 0 ? std::numeric_limits<int>::max() : max;
+    scanFuture      = std::async(std::launch::async, &ScanRoot::doScan, this);
+}
+
+void ScanRoot::scanAbort() {
+    numPendingScans = 0;
+    saneDevice->cancelScan();
+}
 
 void ScanRoot::switchDevice() { mainWindow->showDeviceSelection(); }
 
@@ -290,15 +356,28 @@ void ScanRoot::deviceOptionsReloaded() {
 }
 
 void ScanRoot::updateProgressBar() {
+    auto now = std::chrono::system_clock::now();
+    if (delayScanUntil > now) {
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - delayScanStart);
+        auto total   = std::chrono::duration_cast<std::chrono::milliseconds>(delayScanUntil - delayScanStart);
+        ui->scanProgress->setMinimum(0);
+        ui->scanProgress->setMaximum((int)total.count());
+        ui->scanProgress->setValue((int)elapsed.count());
+        ui->lScanInfo->setText(tr("Waiting:"));
+        return;
+    }
+
     double progress = saneDevice->scanProgress();
     if (progress <= 0.001) {
         ui->scanProgress->setMinimum(0);
         ui->scanProgress->setMaximum(0);
+        ui->lScanInfo->setText(tr("Scan is starting:"));
         return;
     }
     ui->scanProgress->setMinimum(0);
     ui->scanProgress->setMaximum(1000);
     ui->scanProgress->setValue((int)(progress * 1000.0));
+    ui->lScanInfo->setText(tr("Scanning:"));
 }
 
 ImagesTab *ScanRoot::currentTab() {

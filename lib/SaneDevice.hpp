@@ -49,6 +49,8 @@ class SaneDevice {
     [[nodiscard]] SaneImage scan();
     [[nodiscard]] double    scanProgress() const;
 
+    void cancelScan();
+
     [[nodiscard]] snapshot_t optionsSnapshot() const;
 
     void applyOptionSnapshot(const snapshot_t &_snapshot);

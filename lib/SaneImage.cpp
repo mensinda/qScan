@@ -14,19 +14,19 @@ void SaneImage::setup(SANE_Parameters _parameters) {
     switch (_parameters.format) {
         case SANE_FRAME_GRAY:
             isMultiChannel = false;
-            isGray = true;
+            isGray         = true;
             rawDataC1.reserve(parameters.lines * parameters.bytes_per_line);
             break;
         case SANE_FRAME_RGB:
             isMultiChannel = false;
-            isGray = false;
+            isGray         = false;
             rawDataC1.reserve(parameters.lines * parameters.bytes_per_line);
             break;
         case SANE_FRAME_RED:
         case SANE_FRAME_GREEN:
         case SANE_FRAME_BLUE:
             isMultiChannel = true;
-            isGray = false;
+            isGray         = false;
             rawDataC1.reserve(parameters.lines * parameters.bytes_per_line);
             rawDataC2.reserve(parameters.lines * parameters.bytes_per_line);
             rawDataC3.reserve(parameters.lines * parameters.bytes_per_line);
@@ -187,6 +187,30 @@ size_t SaneImage::commonRawSize() {
         return rawDataC1.size();
     }
     return std::min(rawDataC1.size(), std::min(rawDataC2.size(), rawDataC3.size()));
+}
+
+std::vector<SaneImage::RGBA8> SaneImage::asRGBA8() {
+    const std::vector<RGB8> data = asRGB8();
+    std::vector<RGBA8>      res;
+    res.reserve(data.size());
+
+    for (RGB8 const &raw : data) {
+        res.push_back({raw.r, raw.g, raw.b, std::numeric_limits<uint8_t>::max()});
+    }
+
+    return res;
+}
+
+std::vector<SaneImage::RGBA16> SaneImage::asRGBA16() {
+    const std::vector<RGB16> data = asRGB16();
+    std::vector<RGBA16>      res;
+    res.reserve(data.size());
+
+    for (RGB16 const &raw : data) {
+        res.push_back({raw.r, raw.g, raw.b, std::numeric_limits<uint16_t>::max()});
+    }
+
+    return res;
 }
 
 } // namespace qscan::lib

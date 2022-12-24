@@ -191,4 +191,8 @@ void SaneDevice::applyOptionSnapshot(const snapshot_t &_snapshot) {
     reload_options();
 }
 
+void SaneDevice::cancelScan() {
+    sane_cancel(handle);
+}
+
 } // namespace qscan::lib

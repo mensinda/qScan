@@ -34,7 +34,7 @@ class OptionsWidget : public QWidget {
     [[nodiscard]] QRect currentScanArea();
     [[nodiscard]] double getDpmm();
 
-    [[nodiscard]] QScanConfig::BatchScanning batch();
+    [[nodiscard]] QScanConfig::BatchScanning batchConfig();
 
   public slots:
     void sourceUpdated();

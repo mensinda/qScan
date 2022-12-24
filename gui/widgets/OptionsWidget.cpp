@@ -13,7 +13,7 @@ OptionsWidget::OptionsWidget(QWidget *_parent) : QWidget(_parent), ui(new Ui::Op
     ui->setupUi(this);
 }
 
-OptionsWidget::~OptionsWidget() { scanRoot->getMainWindow()->config().batch = batch(); }
+OptionsWidget::~OptionsWidget() { scanRoot->getMainWindow()->config().batch = batchConfig(); }
 
 void OptionsWidget::reloadOptions() {
     SaneOptionsWrapper &opts = scanRoot->getSaneDevice().getOptions();
@@ -152,7 +152,11 @@ void OptionsWidget::scanAreaUpdated() {
     emit scanAreaHasUpdated(scanAreaRect);
 }
 
-void OptionsWidget::batchSettingsUpdated() {}
+void OptionsWidget::batchSettingsUpdated() {
+    ui->batchMax->setEnabled(ui->batchMaxCB->checkState() == Qt::Checked);
+    ui->batchDelay->setEnabled(ui->batchDelayCB->checkState() == Qt::Checked);
+    ui->batchDelayS->setEnabled(ui->batchDelayCB->checkState() == Qt::Checked);
+}
 
 MainWindow *OptionsWidget::getMainWindow() const { return scanRoot->getMainWindow(); }
 
@@ -285,7 +289,7 @@ double OptionsWidget::getDpmm() {
     return resolutionOpt->current / 25.4;
 }
 
-QScanConfig::BatchScanning OptionsWidget::batch() {
+QScanConfig::BatchScanning OptionsWidget::batchConfig() {
     int max   = ui->batchMax->value();
     int delay = ui->batchDelay->value();
     if (ui->batchMaxCB->checkState() == Qt::Unchecked) {

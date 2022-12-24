@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QWidget>
+#include <chrono>
 #include <future>
 
 namespace Ui {
@@ -31,9 +32,13 @@ class ScanRoot : public QWidget {
     lib::SaneException           lastException{SANE_STATUS_GOOD, ""};
     lib::SaneDevice::snapshot_t  optionsSnapshot;
 
+    std::chrono::time_point<std::chrono::system_clock> delayScanUntil;
+    std::chrono::time_point<std::chrono::system_clock> delayScanStart;
+
     QRect  previewSize{};
     QTimer progressTimer;
-    int    tabCounter = 0;
+    int    tabCounter      = 0;
+    int    numPendingScans = 0;
 
   public:
     explicit ScanRoot(QWidget *parent);
@@ -45,7 +50,7 @@ class ScanRoot : public QWidget {
     [[nodiscard]] lib::SaneDevice &getSaneDevice() { return *saneDevice; }
 
     [[nodiscard]] ImagesTab *currentTab();
-    [[nodiscard]] bool hasUnsavedImages();
+    [[nodiscard]] bool       hasUnsavedImages();
 
     void selectTabWithUnsavedImages();
 
@@ -56,8 +61,8 @@ class ScanRoot : public QWidget {
     void scanOne();
     void scanBatch();
     void scanAbort();
-    void scanDone();
-    void scanFailed();
+    void handleScanDone();
+    void handleScanFailed();
     void switchDevice();
 
     void deviceConnected();

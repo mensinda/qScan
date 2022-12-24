@@ -22,7 +22,9 @@ class SaneException : public std::exception {
     SaneException &operator=(const SaneException &) = default;
     SaneException &operator=(SaneException &&)      = default;
 
-    const char *what() const noexcept override;
+    [[nodiscard]] const char               *what() const noexcept override;
+    [[nodiscard]] inline SANE_Status        saneStatus() const noexcept { return status; }
+    [[nodiscard]] inline const std::string &errorMsg() const noexcept { return error; }
 };
 
 } // namespace qscan::lib

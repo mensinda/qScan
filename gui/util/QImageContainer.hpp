@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SaneImage.hpp"
 #include <Magick++.h>
 #include <QImage>
 #include <cstdint>
@@ -8,12 +9,14 @@
 namespace qscan::gui {
 
 struct QImageContainer {
-    std::vector<uint32_t> raw;
-    Magick::Blob          blob;
-    QImage                img;
+    using RGBA8 = lib::SaneImage::RGBA8;
+
+    std::vector<RGBA8> raw;
+    Magick::Blob       blob;
+    QImage             img;
 
     QImageContainer() = default;
-    QImageContainer(std::vector<uint32_t> &&_raw, const Magick::Blob& _blob, QImage &&_img)
+    QImageContainer(std::vector<RGBA8> &&_raw, const Magick::Blob &_blob, QImage &&_img)
         : raw(_raw), blob(_blob), img(_img) {}
     ~QImageContainer() = default;
 

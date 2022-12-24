@@ -82,6 +82,10 @@ void ImagesTab::doSave() {
         return;
     }
 
+    if (image->lastSaveLocation.isEmpty()) {
+        image->lastSaveLocation = image->item->text();
+    }
+
     QString saveFileLocation = QFileDialog::getSaveFileName(
         this,
         tr("Save the currently displayed image in the image viewer"),
@@ -107,7 +111,10 @@ void ImagesTab::doSaveAll() {
     }
 
     QString saveFileLocation =
-        QFileDialog::getSaveFileName(this, tr("Create a multi-image document from all images in the tab"));
+        QFileDialog::getSaveFileName(this,
+                                     tr("Create a multi-image document from all images in the tab"),
+                                     QString(),
+                                     tr("PDF(*.pdf);;DVI(*.dvi)"));
 
     if (saveFileLocation.isNull()) {
         return;

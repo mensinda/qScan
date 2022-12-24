@@ -176,6 +176,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="lScanInfo">
+       <property name="text">
+        <string>Scan info</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QProgressBar" name="scanProgress">
        <property name="value">
         <number>24</number>
