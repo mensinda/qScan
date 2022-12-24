@@ -24,7 +24,7 @@ void ImageViewer::updateSelection(QRect _newSelection) {
     ui->clearSelection->setEnabled(!_newSelection.isNull());
 }
 
-void ImageViewer::updateImage(QImage &_img) { ui->viewer->updateImage(_img); }
+void ImageViewer::updateImage(const QImage &_img) { ui->viewer->updateImage(_img); }
 
 ScanImageView *ImageViewer::imageView() { return ui->viewer; }
 

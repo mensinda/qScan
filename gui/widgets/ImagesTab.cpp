@@ -212,7 +212,7 @@ void ImagesTab::doDelete() {
         imageData->item     = nullptr;
         imageData->modified = false;
         imageData->img.img  = QImage{};
-        imageData->img.raw.clear();
+        imageData->img.raw  = nullptr;
     }
 
     if (ui->listWidget->count() == 0) {

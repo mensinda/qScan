@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <sane/sane.h>
 #include <span>
 #include <vector>
@@ -60,17 +61,18 @@ class SaneImage {
 
     void setup(SANE_Parameters _parameters);
 
-    size_t width();
-    size_t height();
-    size_t depth();
+    [[nodiscard]]  size_t width() const;
+    [[nodiscard]] size_t height() const;
+    [[nodiscard]] size_t depth() const;
+    [[nodiscard]] size_t size() const;
 
-    std::vector<RGB8>   asRGB8();
-    std::vector<RGB16>  asRGB16();
-    std::vector<RGBA8>  asRGBA8();
-    std::vector<RGBA16> asRGBA16();
+    [[nodiscard]] std::unique_ptr<RGB8[]>   asRGB8();
+    [[nodiscard]] std::unique_ptr<RGB16[]>  asRGB16();
+    [[nodiscard]] std::unique_ptr<RGBA8[]>  asRGBA8();
+    [[nodiscard]] std::unique_ptr<RGBA16[]> asRGBA16();
 
   private:
-    size_t commonRawSize();
+    size_t commonRawSize() const;
 };
 
 } // namespace qscan::lib

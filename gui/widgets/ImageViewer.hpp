@@ -22,7 +22,7 @@ class ImageViewer : public QWidget {
     explicit ImageViewer(QWidget *_parent = nullptr);
     virtual ~ImageViewer();
 
-    void updateImage(QImage &_img);
+    void updateImage(const QImage &_img);
 
     [[nodiscard]] ScanImageView *imageView();
 

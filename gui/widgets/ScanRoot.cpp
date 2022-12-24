@@ -64,9 +64,9 @@ QImageContainer ScanRoot::doScan() {
         auto      raw = img.asRGBA8();
 
         QImage qtImage{
-            const_cast<const uchar *>(reinterpret_cast<uchar *>(raw.data())),
+            const_cast<const uchar *>(reinterpret_cast<uchar *>(raw.get())),
             (int)img.width(),
-            (int)(raw.size() / img.width()),
+            (int)img.height(),
             QImage::Format_RGBA8888,
         };
 

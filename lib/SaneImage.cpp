@@ -60,34 +60,36 @@ void SaneImage::addRawData(std::span<uint8_t> _raw, SANE_Frame _format) {
     }
 }
 
-size_t SaneImage::width() { return parameters.pixels_per_line; }
-size_t SaneImage::height() { return commonRawSize() / parameters.bytes_per_line; }
-size_t SaneImage::depth() { return parameters.depth; }
+size_t SaneImage::width() const { return parameters.pixels_per_line; }
+size_t SaneImage::height() const { return commonRawSize() / parameters.bytes_per_line; }
+size_t SaneImage::depth() const { return parameters.depth; }
 
-std::vector<SaneImage::RGB8> SaneImage::asRGB8() {
-    std::vector<RGB8> res;
+std::unique_ptr<SaneImage::RGB8[]> SaneImage::asRGB8() {
+    size_t s   = size();
+    auto   res = std::make_unique<RGB8[]>(s);
     if (depth() > 8) {
-        const std::vector<RGB16> data = asRGB16();
-        res.resize(data.size());
-
-        for (size_t i = 0; i < res.size(); ++i) {
+        const auto data = asRGB16();
+        for (size_t i = 0; i < s; ++i) {
             res[i].r = data[i].r >> 8;
             res[i].g = data[i].g >> 8;
             res[i].b = data[i].b >> 8;
         }
-
         return res;
     }
 
     if (depth() == 8 && isGray) {
-        res.resize(rawDataC1.size());
-        for (size_t i = 0; i < res.size(); ++i) {
+        if (s > rawDataC1.size()) {
+            throw std::runtime_error(fmt::format("Not enough data: Expected {} but got {}", s, rawDataC1.size()));
+        }
+        for (size_t i = 0; i < s; ++i) {
             res[i].r = rawDataC1[i];
             res[i].g = rawDataC1[i];
             res[i].b = rawDataC1[i];
         }
     } else if (depth() == 1 && isGray) {
-        res.resize(rawDataC1.size() * 8);
+        if (s > rawDataC1.size() * 8) {
+            throw std::runtime_error(fmt::format("Not enough data: Expected {} but got {}", s, rawDataC1.size() * 8));
+        }
         for (size_t i = 0; i < rawDataC1.size(); ++i) {
             uint8_t raw      = rawDataC1[i];
             res[i * 8 + 0].r = raw & 0b10000000 ? 0xFF : 0x00;
@@ -123,11 +125,15 @@ std::vector<SaneImage::RGB8> SaneImage::asRGB8() {
             res[i * 8 + 7].b = raw & 0b00000001 ? 0xFF : 0x00;
         }
     } else if (depth() == 8 && !isMultiChannel) {
-        res.resize(rawDataC1.size() / 3);
-        memcpy(res.data(), rawDataC1.data(), rawDataC1.size());
+        if (s * 3 > rawDataC1.size()) {
+            throw std::runtime_error(fmt::format("Not enough data: Expected {} but got {}", s * 3, rawDataC1.size()));
+        }
+        memcpy(res.get(), rawDataC1.data(), s * 3);
     } else if (depth() == 8 && isMultiChannel) {
-        res.resize(commonRawSize());
-        for (size_t i = 0; i < res.size(); ++i) {
+        if (s > commonRawSize()) {
+            throw std::runtime_error(fmt::format("Not enough data: Expected {} but got {}", s, commonRawSize()));
+        }
+        for (size_t i = 0; i < s; ++i) {
             res[i].r = rawDataC1[i];
             res[i].g = rawDataC2[i];
             res[i].b = rawDataC3[i];
@@ -139,38 +145,32 @@ std::vector<SaneImage::RGB8> SaneImage::asRGB8() {
     return res;
 }
 
-std::vector<SaneImage::RGB16> SaneImage::asRGB16() {
-    std::vector<RGB16> res;
+std::unique_ptr<SaneImage::RGB16[]> SaneImage::asRGB16() {
+    size_t s   = size();
+    auto   res = std::make_unique<RGB16[]>(s);
     if (depth() < 16) {
-        const std::vector<RGB8> data = asRGB8();
-        res.resize(data.size());
-
-        for (size_t i = 0; i < res.size(); ++i) {
-            const RGB8 &orig = data[i];
-            RGB16      &dest = res[i];
-
-            dest.r = orig.r << 8;
-            dest.g = orig.g << 8;
-            dest.b = orig.b << 8;
+        const auto data = asRGB8();
+        for (size_t i = 0; i < s; ++i) {
+            res[i].r = data[i].r << 8;
+            res[i].g = data[i].g << 8;
+            res[i].b = data[i].b << 8;
         }
-
         return res;
     }
 
     if (depth() == 16 && !isMultiChannel) {
-        res.resize(rawDataC1.size() / 6);
-        std::span<uint16_t> dataC1{reinterpret_cast<uint16_t *>(rawDataC1.data()), rawDataC1.size() / 2};
-        for (size_t i = 0; i < res.size(); ++i) {
-            res[i].r = dataC1[i * 3 + 0];
-            res[i].g = dataC1[i * 3 + 1];
-            res[i].b = dataC1[i * 3 + 2];
+        if (s * 6 > rawDataC1.size()) {
+            throw std::runtime_error(fmt::format("Not enough data: Expected {} but got {}", s * 6, rawDataC1.size()));
         }
+        memcpy(res.get(), rawDataC1.data(), s * 6);
     } else if (depth() == 16 && isMultiChannel) {
-        res.resize(commonRawSize() / 2);
+        if (s * 2 > commonRawSize()) {
+            throw std::runtime_error(fmt::format("Not enough data: Expected {} but got {}", s * 2, commonRawSize()));
+        }
         std::span<uint16_t> dataC1{reinterpret_cast<uint16_t *>(rawDataC1.data()), rawDataC1.size() / 2};
         std::span<uint16_t> dataC2{reinterpret_cast<uint16_t *>(rawDataC2.data()), rawDataC2.size() / 2};
         std::span<uint16_t> dataC3{reinterpret_cast<uint16_t *>(rawDataC3.data()), rawDataC3.size() / 2};
-        for (size_t i = 0; i < res.size(); ++i) {
+        for (size_t i = 0; i < s; ++i) {
             res[i].r = dataC1[i];
             res[i].g = dataC2[i];
             res[i].b = dataC3[i];
@@ -182,32 +182,32 @@ std::vector<SaneImage::RGB16> SaneImage::asRGB16() {
     return res;
 }
 
-size_t SaneImage::commonRawSize() {
+size_t SaneImage::commonRawSize() const {
     if (!isMultiChannel) {
         return rawDataC1.size();
     }
     return std::min(rawDataC1.size(), std::min(rawDataC2.size(), rawDataC3.size()));
 }
 
-std::vector<SaneImage::RGBA8> SaneImage::asRGBA8() {
-    const std::vector<RGB8> data = asRGB8();
-    std::vector<RGBA8>      res;
-    res.reserve(data.size());
+size_t SaneImage::size() const { return width() * height(); }
 
-    for (RGB8 const &raw : data) {
-        res.push_back({raw.r, raw.g, raw.b, std::numeric_limits<uint8_t>::max()});
+std::unique_ptr<SaneImage::RGBA8[]> SaneImage::asRGBA8() {
+    const auto data = asRGB8();
+    auto       res  = std::make_unique<RGBA8[]>(size());
+
+    for (size_t i = 0; i < size(); ++i) {
+        res[i] = {data[i].r, data[i].g, data[i].b, std::numeric_limits<uint8_t>::max()};
     }
 
     return res;
 }
 
-std::vector<SaneImage::RGBA16> SaneImage::asRGBA16() {
-    const std::vector<RGB16> data = asRGB16();
-    std::vector<RGBA16>      res;
-    res.reserve(data.size());
+std::unique_ptr<SaneImage::RGBA16[]> SaneImage::asRGBA16() {
+    const auto data = asRGB16();
+    auto       res  = std::make_unique<RGBA16[]>(size());
 
-    for (RGB16 const &raw : data) {
-        res.push_back({raw.r, raw.g, raw.b, std::numeric_limits<uint16_t>::max()});
+    for (size_t i = 0; i < size(); ++i) {
+        res[i] = {data[i].r, data[i].g, data[i].b, std::numeric_limits<uint16_t>::max()};
     }
 
     return res;
