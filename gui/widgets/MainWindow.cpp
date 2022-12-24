@@ -41,7 +41,20 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::showAbout() {
-    QMessageBox::about(this, tr("About QScan"), tr("Version: %1").arg(QString::fromStdString(QSCAN_VERSION_STR)));
+    const char* about = R"(
+<b>Version: %1</b>
+<br>
+<br>
+Authors:
+<ul>
+    <li>Daniel Mensinger (@mensinda)</li>
+</ul>
+)";
+
+    QMessageBox::about(
+        this,
+        tr("About QScan"),
+        tr(about).arg(QString::fromStdString(QSCAN_VERSION_STR)));
 }
 void MainWindow::showAboutQt() { QMessageBox::aboutQt(this); }
 
