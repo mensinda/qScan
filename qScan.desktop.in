@@ -4,7 +4,6 @@ Type=Application
 Version=@PROJ_VERSION@
 Name=qScan
 Comment=Document scanner
-Path=$HOME
 Exec=@BIN_DIR@/qScan
 Icon=qScan
 Terminal=false

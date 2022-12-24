@@ -156,6 +156,9 @@ void QScanConfig::save() {
 
 void QScanConfig::load() {
     std::ifstream ifs(cfgFile());
+    if (!ifs.is_open()) {
+        return;
+    }
     json          j;
     ifs >> j;
     from_json(j, *this);
