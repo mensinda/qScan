@@ -28,8 +28,8 @@ struct QScanConfig {
     };
 
     struct BatchScanning {
-        int max;
-        int delay;
+        int max   = -11;
+        int delay = -11;
     };
 
     std::optional<LastDevice> lastDevice;
