@@ -37,6 +37,9 @@ class MainWindow : public QMainWindow {
     void showAboutQt();
     bool doClose();
 
+  protected:
+    void closeEvent(QCloseEvent *event) override;
+
   private:
     std::unique_ptr<Ui::MainWindow> ui;
 };

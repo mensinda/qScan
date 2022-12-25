@@ -5,6 +5,7 @@
 #include "qscan_config.hpp"
 #include "qscan_log.hpp"
 
+#include <QCloseEvent>
 #include <QMessageBox>
 
 using namespace qscan::lib;
@@ -90,6 +91,25 @@ bool MainWindow::doClose() {
 
     return close();
 }
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    // Check if closeable
+    if (ui->scanRoot->hasUnsavedImages()) {
+        ui->scanRoot->selectTabWithUnsavedImages();
+        QMessageBox::StandardButton btn =
+            QMessageBox::warning(this,
+                                 tr("Unsaved images"),
+                                 tr("Not all images have been saved. Do you still want to quit?"),
+                                 QMessageBox::Yes | QMessageBox::No,
+                                 QMessageBox::No);
+        if (btn == QMessageBox::No) {
+            event->ignore();
+            return ;
+        }
+    }
+    event->accept();
+}
+
 
 void MainWindow::setCanSave(bool _canSave) {
     ui->actionSave->setEnabled(_canSave);
