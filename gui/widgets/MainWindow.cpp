@@ -76,7 +76,7 @@ void MainWindow::deviceSelected(std::unique_ptr<lib::SaneDevice> device) {
 
 bool MainWindow::doClose() {
     // Check if closeable
-    if (ui->scanRoot->hasUnsavedImages()) {
+    if (ui->scanRoot->hasUnsavedImages() && !ui->scanRoot->isHidden()) {
         ui->scanRoot->selectTabWithUnsavedImages();
         QMessageBox::StandardButton btn =
             QMessageBox::warning(this,
@@ -94,7 +94,7 @@ bool MainWindow::doClose() {
 
 void MainWindow::closeEvent(QCloseEvent *event) {
     // Check if closeable
-    if (ui->scanRoot->hasUnsavedImages()) {
+    if (ui->scanRoot->hasUnsavedImages() && !ui->scanRoot->isHidden()) {
         ui->scanRoot->selectTabWithUnsavedImages();
         QMessageBox::StandardButton btn =
             QMessageBox::warning(this,

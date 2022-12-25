@@ -239,7 +239,21 @@ void ScanRoot::scanAbort() {
     saneDevice->cancelScan();
 }
 
-void ScanRoot::switchDevice() { mainWindow->showDeviceSelection(); }
+void ScanRoot::switchDevice() {
+    if (hasUnsavedImages()) {
+        selectTabWithUnsavedImages();
+        QMessageBox::StandardButton btn =
+            QMessageBox::warning(this,
+                                 tr("Unsaved images"),
+                                 tr("Not all images have been saved. Do you still want to switch the device?"),
+                                 QMessageBox::Yes | QMessageBox::No,
+                                 QMessageBox::No);
+        if (btn == QMessageBox::No) {
+            return;
+        }
+    }
+    mainWindow->showDeviceSelection();
+}
 
 void ScanRoot::updateSaneDevice(std::unique_ptr<lib::SaneDevice> device) {
     saneDevice = std::move(device);
