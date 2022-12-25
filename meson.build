@@ -44,7 +44,6 @@ qt_dep = dependency('qt5', modules: ['Core', 'Gui', 'Widgets'], include_type: 's
 
 subdir('lib')
 subdir('gui')
-subdir('test')
 
 qscan_desktop = configure_file(
     configuration: {
