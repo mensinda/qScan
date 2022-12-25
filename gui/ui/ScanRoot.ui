@@ -162,7 +162,7 @@
         <string>Scan multiple images</string>
        </property>
        <property name="text">
-        <string>Batch scan</string>
+        <string>Multipage scan</string>
        </property>
        <property name="icon">
         <iconset theme="media-playlist-repeat"/>

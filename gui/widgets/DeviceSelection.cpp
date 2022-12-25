@@ -3,9 +3,12 @@
 
 #include "DeviceElement.hpp"
 #include "MainWindow.hpp"
+#include "SaneException.hpp"
 #include "qscan_log.hpp"
 
 #include <future>
+
+#include <QInputDialog>
 
 using namespace qscan::lib;
 
@@ -23,7 +26,9 @@ void DeviceSelection::refreshDevices() {
     elements.clear();
     ui->scanLabel->show();
     ui->selectLabel->hide();
+    ui->avahiNoteLabel->hide();
     ui->progressBar->setEnabled(true);
+    ui->manualBtn->setEnabled(false);
     ui->refreshBtn->setEnabled(false);
     ui->scrollArea->setEnabled(false);
 
@@ -33,7 +38,9 @@ void DeviceSelection::refreshDevices() {
 void DeviceSelection::devicesLoaded() {
     ui->scanLabel->hide();
     ui->selectLabel->show();
+    ui->avahiNoteLabel->show();
     ui->progressBar->setEnabled(false);
+    ui->manualBtn->setEnabled(true);
     ui->refreshBtn->setEnabled(true);
     ui->scrollArea->setEnabled(true);
 
@@ -50,6 +57,22 @@ void DeviceSelection::doBackendReload() {
 
 void DeviceSelection::deviceSelected(std::unique_ptr<lib::SaneDevice> device) {
     mainWindow->deviceSelected(std::move(device));
+}
+
+void DeviceSelection::tryConnectManually() {
+    bool isOk;
+
+    QString url = QInputDialog::getText(this,
+                                        tr("Manual device connection"),
+                                        tr("Please enter the scanner device URL here:"),
+                                        QLineEdit::Normal,
+                                        "",
+                                        &isOk);
+    if (!isOk) {
+        return;
+    }
+
+    mainWindow->deviceSelected(std::make_unique<lib::SaneDevice>(url.toStdString()));
 }
 
 } // namespace qscan::gui

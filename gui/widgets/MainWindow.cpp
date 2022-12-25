@@ -104,7 +104,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
                                  QMessageBox::No);
         if (btn == QMessageBox::No) {
             event->ignore();
-            return ;
+            return;
         }
     }
     event->accept();

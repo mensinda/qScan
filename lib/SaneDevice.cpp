@@ -11,6 +11,8 @@ namespace qscan::lib {
 SaneDevice::SaneDevice(const SANE_Device *device)
     : name(device->name), vendor(device->vendor), model(device->model), type(device->type), options(&rawOptions) {}
 
+SaneDevice::SaneDevice(const std::string &_name) : name(_name), options(&rawOptions) {}
+
 SaneDevice::~SaneDevice() {
     if (handle) {
         logger()->info("[Sane] Closing device {}", name);
@@ -21,8 +23,12 @@ SaneDevice::~SaneDevice() {
 
 void SaneDevice::connect() {
     logger_t log = logger();
+    if (handle) {
+        log->debug("[Sane] Already connected to '{}'", name);
+        return;
+    }
 
-    log->info("[Sane] Connecting to {}", name);
+    log->info("[Sane] Connecting to '{}'", name);
 
     SANE_Status status = sane_open(name.c_str(), &handle);
     if (status != SANE_STATUS_GOOD) {

@@ -44,6 +44,7 @@ class DeviceSelection : public QWidget {
   public slots:
     void refreshDevices();
     void devicesLoaded();
+    void tryConnectManually();
 
   signals:
     void finishedReloading();

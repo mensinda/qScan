@@ -76,7 +76,7 @@
         <x>0</x>
         <y>0</y>
         <width>684</width>
-        <height>291</height>
+        <height>266</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="scrollLayout">
@@ -100,6 +100,16 @@
    <item>
     <layout class="QHBoxLayout" name="hl1">
      <item>
+      <widget class="QPushButton" name="manualBtn">
+       <property name="toolTip">
+        <string>Manually enter the device url to connect to</string>
+       </property>
+       <property name="text">
+        <string>Connect manually</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QProgressBar" name="progressBar">
        <property name="maximum">
         <number>0</number>
@@ -120,6 +130,19 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="avahiNoteLabel">
+     <property name="toolTip">
+      <string>Enter the device URL manually</string>
+     </property>
+     <property name="text">
+      <string>Note: If your scanner was not found make sure that the avahi-daemon is running.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -157,10 +180,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>manualBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceSelection</receiver>
+   <slot>tryConnectManually()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>350</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>349</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>finishedReloading()</signal>
   <slot>refreshDevices()</slot>
   <slot>devicesLoaded()</slot>
+  <slot>tryConnectManually()</slot>
  </slots>
 </ui>

@@ -257,7 +257,7 @@
        </rect>
       </property>
       <attribute name="label">
-       <string>Batch scanning</string>
+       <string>Multipage scanning</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="1">

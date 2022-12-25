@@ -35,6 +35,7 @@ class SaneDevice {
   public:
 
     explicit SaneDevice(const SANE_Device *device);
+    explicit SaneDevice(const std::string &_name);
     virtual ~SaneDevice();
 
     void connect();
