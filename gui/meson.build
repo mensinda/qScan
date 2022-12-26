@@ -37,7 +37,7 @@ gui_moc = qt.compile_moc(sources: [], headers: gui_hpp_src)
 
 gui_exe = executable(
     'qscan', [gui_cpp_src, gui_hpp_src, gui_ui, gui_moc],
-    dependencies: [qt_dep, qscan_lib_dep, magick_dep],
+    dependencies: [qt_dep, qscan_lib_dep, magick_dep, json_dep],
     include_directories: ['widgets', 'viewer'],
     install: true,
 )
