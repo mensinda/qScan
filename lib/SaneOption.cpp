@@ -6,7 +6,6 @@
 #include "qscan_log.hpp"
 
 #include <algorithm>
-#include <numeric>
 
 namespace qscan::lib {
 
@@ -15,9 +14,18 @@ SaneOption::SaneOption(SaneDevice *_device, SANE_Int _index) : device(_device), 
 void SaneOption::exceptional_control_option(SANE_Action action, void *value_raw, SANE_Int *info) {
     SANE_Status status = sane_control_option(device->getHandle(), index, action, value_raw, info);
     if (status != SANE_STATUS_GOOD) {
+        std::string errorStatus =
+            fmt::format("option {} (index {}) failed; type={}; uint={}; size={}; constraint_type={}; caps={}",
+                        name,
+                        index,
+                        enum2str::toStr(type),
+                        enum2str::toStr(unit),
+                        size,
+                        enum2str::toStr(constraintType),
+                        enum2str::SaneOption_OptionCap_toStr(caps));
         switch (action) {
-            case SANE_ACTION_GET_VALUE: throw SaneException(status, "Getting option " + name + " failed");
-            default: throw SaneException(status, "Setting option " + name + " failed");
+            case SANE_ACTION_GET_VALUE: throw SaneException(status, "Getting " + errorStatus);
+            default: throw SaneException(status, "Setting " + errorStatus);
         }
     }
 }
@@ -105,6 +113,25 @@ void SaneOption::reloadValue() {
     auto  raw_ptr = std::make_unique<uint8_t[]>(size);
     void *raw     = raw_ptr.get();
 
+    // Do not fetch inactive values
+    if ((caps & SANE_CAP_INACTIVE) == SANE_CAP_INACTIVE) {
+        logger()->debug("[Sane]  -- {:<16}: {:<8} | {:<8} | {:<16} = {:<32} -- ({})",
+                        name,
+                        std::string_view{enum2str::toStr(type)}.substr(constStrlen("SANE_TYPE_")),
+                        std::string_view{enum2str::toStr(unit)}.substr(constStrlen("SANE_UNIT_")),
+                        std::string_view{enum2str::toStr(constraintType)}.substr(constStrlen("SANE_CONSTRAINT_")),
+                        "<INACTIVE>",
+                        enum2str::SaneOption_OptionCap_toStr(caps));
+        switch (type) {
+            case SANE_TYPE_INT: value = 0; break;
+            case SANE_TYPE_FIXED: value = 0.0f; break;
+            case SANE_TYPE_BOOL: value = false; break;
+            case SANE_TYPE_STRING: value = ""; break;
+            default: throw std::runtime_error("Unsupported option type " + enum2str::toStr(type));
+        }
+        return;
+    }
+
     exceptional_control_option(SANE_ACTION_GET_VALUE, raw, nullptr);
     switch (type) {
         case SANE_TYPE_INT: value = *((SANE_Int *)raw); break;
@@ -126,6 +153,11 @@ void SaneOption::reloadValue() {
 }
 
 bool SaneOption::setValue(value_t newValue) {
+    if ((caps & SANE_CAP_INACTIVE) == SANE_CAP_INACTIVE) {
+        logger()->warn("[Sane] Not setting INACTIVE option {}", name);
+        return false;
+    }
+
     SANE_Int info;
     switch (type) {
         case SANE_TYPE_INT:

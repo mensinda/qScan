@@ -57,8 +57,8 @@ void OptionsWidget::reloadOptions() {
 
     // Resolution
     ui->coResolution->clear();
-    ui->coResolution->setEnabled((bool)modeOpt);
-    if (modeOpt) {
+    ui->coResolution->setEnabled((bool)resolutionOpt);
+    if (resolutionOpt) {
         const std::string unitStr = SaneBackend::saneUnitToDisplayString(resolutionOpt->unit);
         for (const double i : resolutionOpt->values) {
             auto displayStr = fmt::format("{} {}", (int)i, unitStr);
