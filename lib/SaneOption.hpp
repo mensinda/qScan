@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sane/sane.h>
+#include <cstdint>
 #include <string>
 #include <variant>
 #include <vector>
